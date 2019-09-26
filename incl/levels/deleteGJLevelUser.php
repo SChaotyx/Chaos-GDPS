@@ -4,7 +4,7 @@ include "../lib/connection.php";
 require_once "../lib/GJPCheck.php";
 require_once "../lib/exploitPatch.php";
 require_once "../lib/mainLib.php";
-$mainLib = new mainLib();
+$gs = new mainLib();
 $ep = new exploitPatch();
 $levelID = $ep->remove($_POST["levelID"]);
 $accountID = $ep->remove($_POST["accountID"]);
@@ -15,7 +15,7 @@ if(!is_numeric($levelID)){
 	exit("-1");
 }
 if($gjpresult == 1){
-	$userID = $mainLib->getUserID($accountID);
+	$userID = $gs->getUserID($accountID);
 	$query = $db->prepare("DELETE from levels WHERE levelID=:levelID AND userID=:userID AND starStars = 0 LIMIT 1");
 	$query->execute([':levelID' => $levelID, ':userID' => $userID]);
 	$query6 = $db->prepare("INSERT INTO actions (type, value, timestamp, value2) VALUES 

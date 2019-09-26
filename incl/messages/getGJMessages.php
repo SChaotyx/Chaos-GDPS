@@ -4,7 +4,9 @@ chdir(dirname(__FILE__));
 include "../lib/connection.php";
 require_once "../lib/GJPCheck.php";
 require_once "../lib/exploitPatch.php";
+require_once "../lib/mainLib.php";
 $ep = new exploitPatch();
+$gs = new mainLib();
 $msgstring = "";
 $userid = 1337;
 //code begins
@@ -37,7 +39,9 @@ if($msgcount == 0){
 }
 foreach ($result as &$message1) {
 	if($message1["messageID"]!=""){
-		$uploadDate = date("d/m/Y G.i", $message1["timestamp"]);
+		$uploadDate = $message1["timestamp"];
+		$uploadDate = $gs->timeElapsed($uploadDate);
+	 //$uploadDate = date("d/m/Y G.i", $message1["timestamp"]);
 		if($getSent == 1){
 			$accountID = $message1["toAccountID"];
 		}else{

@@ -3,6 +3,8 @@ chdir(dirname(__FILE__));
 include "../lib/connection.php";
 require_once "../lib/exploitPatch.php";
 require_once "../lib/GJPCheck.php";
+require_once "../lib/mainLib.php";
+$gs = new mainLib();
 $ep = new exploitPatch();
 $GJPCheck = new GJPCheck();
 $reqstring = "";
@@ -23,10 +25,10 @@ if($gjpresult != 1){
 }
 $offset = $page*10;
 if($getSent == 0){
-	$query = "SELECT accountID, toAccountID, uploadDate, ID, comment, isNew FROM friendreqs WHERE toAccountID = :accountID LIMIT 10 OFFSET $offset";
+	$query = "SELECT accountID, toAccountID, uploadDate, ID, comment, isNew FROM friendreqs WHERE toAccountID = :accountID ORDER BY uploadDate DESC LIMIT 10 OFFSET $offset";
 	$countquery = "SELECT count(*) FROM friendreqs WHERE toAccountID = :accountID";
 }else if($getSent == 1){
-	$query = "SELECT * FROM friendreqs WHERE accountID = :accountID LIMIT 10 OFFSET $offset";
+	$query = "SELECT * FROM friendreqs WHERE accountID = :accountID ORDER BY uploadDate LIMIT 10 OFFSET $offset";
 	$countquery = "SELECT count(*) FROM friendreqs WHERE accountID = :accountID";
 }
 $query = $db->prepare($query);
@@ -49,7 +51,9 @@ foreach($result as &$request) {
 	$query->execute([':requester' => $requester]);
 	$result2 = $query->fetchAll();
 	$user = $result2[0];
-	$uploadTime = date("d/m/Y G.i", $request["uploadDate"]);
+	//$uploadTime = date("d/m/Y G.i", $request["uploadDate"]);
+	$uploadTime = $request["uploadDate"];
+    $uploadTime= $gs->timeElapsed($uploadTime);
 	if(is_numeric($user["extID"])){
 		$extid = $user["extID"];
 	}else{

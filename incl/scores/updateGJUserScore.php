@@ -7,6 +7,8 @@ require_once "../lib/exploitPatch.php";
 $ep = new exploitPatch();
 require_once "../lib/mainLib.php";
 $gs = new mainLib();
+require_once "../discord/discordLib.php";
+$dis = new discordLib();
 //here im getting all the data
 if(!empty($_POST["gameVersion"])){
 	$gameVersion = $ep->remove($_POST["gameVersion"]);
@@ -143,5 +145,8 @@ $query2 = $db->prepare("INSERT INTO actions (type, value, timestamp, account, va
 $query = $db->prepare("UPDATE users SET gameVersion=:gameVersion, userName=:userName, coins=:coins,  secret=:secret, stars=:stars, demons=:demons, icon=:icon, color1=:color1, color2=:color2, iconType=:iconType, userCoins=:userCoins, special=:special, accIcon=:accIcon, accShip=:accShip, accBall=:accBall, accBird=:accBird, accDart=:accDart, accRobot=:accRobot, accGlow=:accGlow, IP=:hostname, lastPlayed=:uploadDate, accSpider=:accSpider, accExplosion=:accExplosion, diamonds=:diamonds WHERE userID=:userID");
 $query->execute([':gameVersion' => $gameVersion, ':userName' => $userName, ':coins' => $coins, ':secret' => $secret, ':stars' => $stars, ':demons' => $demons, ':icon' => $icon, ':color1' => $color1, ':color2' => $color2, ':iconType' => $iconType, ':userCoins' => $userCoins, ':special' => $special, ':accIcon' => $accIcon, ':accShip' => $accShip, ':accBall' => $accBall, ':accBird' => $accBird, ':accDart' => $accDart, ':accRobot' => $accRobot, ':accGlow' => $accGlow, ':hostname' => $hostname, ':uploadDate' => $uploadDate, ':userID' => $userID, ':accSpider'=>$accSpider, ':accExplosion'=>$accExplosion, ':diamonds'=>$diamonds]);
 $query2->execute([':timestamp' => time(), ':stars' => $starsdiff, ':account' => $userID, ':coinsd' => $coindiff, ':demon' => $demondiff, ':usrco' => $ucdiff, ':diamond' => $diadiff]);
+if(is_numeric($_POST["accountID"])){	
+	$dis->discordNotify(2, $dis->accEmbedContent(1, $dis->title(18), $dis->iconProfile($_POST["accountID"]), $dis->embedColor(7), $dis->modBadge($_POST["accountID"]), $dis->footerText($_POST["accountID"]), $_POST["accountID"], 0));
+}
 echo $userID;
 ?>

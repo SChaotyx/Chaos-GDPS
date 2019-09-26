@@ -14,11 +14,10 @@ if($id != "" AND $gjp != ""){
 	$gjpresult = $GJPCheck->check($gjp,$id);
 	if($gjpresult == 1){
 		$permState = $gs->getMaxValuePermission($id, "actionRequestMod");
-		echo $permState;
-	}else{
-		echo -1;
+		if($permState){
+			echo $permState;
+		}
 	}
-}else{
-	echo -1;
 }
+echo -1;
 ?>

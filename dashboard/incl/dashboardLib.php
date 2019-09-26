@@ -9,14 +9,15 @@ class dashboardLib{
 		if($isSubdirectory){
 			echo '<base href="../">';
 		}
-		echo '			<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-						<script async src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-						<script async src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-						<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
-						<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+		echo '			<script src="incl/source/jquery-3.2.1.slim.min.js"></script>
+						<script async src="incl/source/popper.min.js"></script>
+						<script async src="incl/source/bootstrap.min.js"></script>
+						<script src="incl/source/Chart.min.js"></script>
+						<link rel="stylesheet" href="incl/source/bootstrap.min.css">
 						<link async rel="stylesheet" href="incl/cvolton.css">
 						<link async rel="stylesheet" href="incl/font-awesome-4.7.0/css/font-awesome.min.css">
-						<title>[Beta] CvoltonGDPS Dashboard</title>
+						<title>GD-CHAOS</title>
+						<link rel="shortcut icon" href="icon.png" />
 						<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">';
 		echo '		</head>
 				<body>';
@@ -55,7 +56,9 @@ class dashboardLib{
 		$gs = new mainLib();
 		$homeActive = "";
 		$accountActive = "";
+		$browseActive = "";
 		$modActive = "";
+		$adminActive = "";
 		$reuploadActive = "";
 		$statsActive = "";
 		switch($active){
@@ -65,8 +68,14 @@ class dashboardLib{
 			case "account":
 				$accountActive = "active";
 				break;
+			case "browse":
+				$browseActive = "active";
+				break;
 			case "mod":
 				$modActive = "active";
+				break;
+			case "admin":
+				$adminActive = "active";
 				break;
 			case "reupload":
 				$reuploadActive = "active";
@@ -76,7 +85,7 @@ class dashboardLib{
 				break;
 		}
 		echo '<nav class="navbar navbar-expand-lg navbar-dark menubar">
-			<a class="navbar-brand" href="index.php">CvoltonGDPS</a>
+			<a class="navbar-brand" href="index.php">GD Chaos</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -87,16 +96,16 @@ class dashboardLib{
 							<i class="fa fa-home" aria-hidden="true"></i> '.$this->getLocalizedString("homeNavbar").'
 						</a>
 					</li>';
-		$browse = '<li class="nav-item dropdown '.$accountActive.' ">
+		$browse = '<li class="nav-item dropdown '.$browseActive.' ">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							<i class="fa fa-folder-open" aria-hidden="true"></i> '.$this->getLocalizedString("browse").'
 						</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="#">'.$this->getLocalizedString("accounts").' (N)</a>
-							<a class="dropdown-item" href="#">'.$this->getLocalizedString("levels").' (N)</a>
-							<a class="dropdown-item" href="stats/modActionsList.php">'.$this->getLocalizedString("modActions").'</a>
-							<a class="dropdown-item" href="stats/packTable.php">'.$this->getLocalizedString("packTable").'</a>
-							<a class="dropdown-item" href="stats/gauntletTable.php">'.$this->getLocalizedString("gauntletTable").'</a>';
+                            <a class="dropdown-item" href="browse/browseUser.php">'.$this->getLocalizedString("Browse User").'</a>
+							<a class="dropdown-item" href="browse/vipList.php">'.$this->getLocalizedString("ModList").'</a>
+							<a class="dropdown-item" href="browse/demoteList.php">'.$this->getLocalizedString("ExmodList").'</a>	
+							<a class="dropdown-item" href="browse/modCount.php">'.$this->getLocalizedString("modcount").'</a>
+							<a class="dropdown-item" href="browse/ElderCount.php">'.$this->getLocalizedString("eldercount").'</a>';
 		if(isset($_SESSION["accountID"]) AND $_SESSION["accountID"] != 0){
 			echo '
 					<li class="nav-item dropdown '.$accountActive.' ">
@@ -104,19 +113,36 @@ class dashboardLib{
 							<i class="fa fa-user" aria-hidden="true"></i> '.$this->getLocalizedString("accountManagement").'
 						</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="../tools/account/changePassword.php">'.$this->getLocalizedString("changePassword").' (T)</a>
-							<a class="dropdown-item" href="../tools/account/changeUsername.php">'.$this->getLocalizedString("changeUsername").' (T)</a>
+							<a class="dropdown-item" href="account/changePassword.php">'.$this->getLocalizedString("changePassword").'</a>
+							<a class="dropdown-item" href="account/changeUsername.php">'.$this->getLocalizedString("changeUsername").'</a>
 							<a class="dropdown-item" href="account/unlisted.php">'.$this->getLocalizedString("unlistedLevels").'</a>
+							<a class="dropdown-item" href="account/myLevels.php">'.$this->getLocalizedString("myLevels").'</a>
+							<a class="dropdown-item" href="account/myComments.php">'.$this->getLocalizedString("commentshistory").'</a>
 						</div>
-					</li>' . $browse . '<a class="dropdown-item" href="../tools/stats/songList.php">'.$this->getLocalizedString("songs").' (T)</a></div></li>';
+					</li>' . $browse . '</div></li>';
 			if($gs->checkPermission($_SESSION["accountID"], "dashboardModTools")){
 				echo '<li class="nav-item dropdown '.$modActive.'">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							<i class="fa fa-wrench" aria-hidden="true"></i> '.$this->getLocalizedString("modTools").'
 						</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="../tools/leaderboardsBan.php">'.$this->getLocalizedString("leaderboardBan").' (T)</a>
-							<a class="dropdown-item" href="../tools/packCreate.php">'.$this->getLocalizedString("packManage").' (T)</a>
+							<a class="dropdown-item" href="modtools/banned.php">'.$this->getLocalizedString("banned").'</a>
+							<a class="dropdown-item" href="modtools/modsendList.php">'.$this->getLocalizedString("sendlevels").'</a>
+							<a class="dropdown-item" href="modtools/modActionsList.php">'.$this->getLocalizedString("modactions").'</a>
+							<a class="dropdown-item" href="modtools/elderActionsList.php">'.$this->getLocalizedString("elderactions").'</a>
+						</div>
+					</li>';
+			}
+			if($gs->checkPermission($_SESSION["accountID"], "dashboardAdminTools")){
+				echo '<li class="nav-item dropdown '.$adminActive.'">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="fa fa-wrench" aria-hidden="true"></i> '.$this->getLocalizedString("adminTools").'
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						    <a class="dropdown-item" href="admin/levelReupload.php">Level Reupload</a>
+						    <a class="dropdown-item" href="admin/packCreate.php">'.$this->getLocalizedString("packManage").'</a>
+							<a class="dropdown-item" href="admin/restrictions.php">'.$this->getLocalizedString("restrictions").'</a>			
+							<a class="dropdown-item" href="admin/passwordRecovery.php">'.$this->getLocalizedString("passrecovery").'</a>					
 						</div>
 					</li>';
 			}
@@ -128,8 +154,8 @@ class dashboardLib{
 							<i class="fa fa-upload" aria-hidden="true"></i> '.$this->getLocalizedString("reuploadSection").'
 						</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="../tools/levelReupload.php">'.$this->getLocalizedString("levelReupload").' (T) (note: gonna be both gdps to gd and gd to gdps)</a>
 							<a class="dropdown-item" href="reupload/songAdd.php">'.$this->getLocalizedString("songAdd").'</a>
+							<a class="dropdown-item" href="reupload/togd.php">'.$this->getLocalizedString("leveltogd").'</a>
 						</div>
 					</li>
 					<li class="nav-item dropdown '.$statsActive.'">
@@ -137,9 +163,15 @@ class dashboardLib{
 							<i class="fa fa-bar-chart" aria-hidden="true"></i> '.$this->getLocalizedString("statsSection").'
 						</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+							<a class="dropdown-item" href="stats/top24h.php">'.$this->getLocalizedString("leaderboardTime").'</a>
+							<a class="dropdown-item" href="stats/general.php">'.$this->getLocalizedString("generalstats").'</a>
 							<a class="dropdown-item" href="stats/dailyTable.php">'.$this->getLocalizedString("dailyTable").'</a>
-							<a class="dropdown-item" href="stats/modActions.php">'.$this->getLocalizedString("modActions").'</a>
-							<a class="dropdown-item" href="../tools/stats/top24h.php">'.$this->getLocalizedString("leaderboardTime").' (T)</a>
+							<a class="dropdown-item" href="stats/dailyTablePending.php">'.$this->getLocalizedString("dailyTableP").'</a>
+							<a class="dropdown-item" href="stats/packTable.php">'.$this->getLocalizedString("packTable").'</a>
+							<a class="dropdown-item" href="stats/gauntletTable.php">'.$this->getLocalizedString("gauntletTable").'</a>
+							<a class="dropdown-item" href="stats/reportList.php">'.$this->getLocalizedString("reportlist").'</a>
+                            <a class="dropdown-item" href="stats/songList.php">'.$this->getLocalizedString("songs").'</a>
+							
 						</div>
 					</li>
 				</ul>
@@ -149,21 +181,7 @@ class dashboardLib{
 							<i class="fa fa-language" aria-hidden="true"></i> '.$this->getLocalizedString("language").'
 						</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="lang/switchLang.php?lang=CS">Česky</a>
-							<a class="dropdown-item" href="lang/switchLang.php?lang=DE">Deutsch</a>
-							<a class="dropdown-item" href="lang/switchLang.php?lang=EE">Eesti</a>
 							<a class="dropdown-item" href="lang/switchLang.php?lang=EN">English</a>
-							<a class="dropdown-item" href="lang/switchLang.php?lang=EO">Esperanto</a>
-							<a class="dropdown-item" href="lang/switchLang.php?lang=ES">Español</a>
-							<a class="dropdown-item" href="lang/switchLang.php?lang=GR">Ελληνικά</a>
-							<a class="dropdown-item" href="lang/switchLang.php?lang=HR">Hrvatski</a>
-							<a class="dropdown-item" href="lang/switchLang.php?lang=IT">Italiano</a>
-							<a class="dropdown-item" href="lang/switchLang.php?lang=PL">Polski</a>
-							<a class="dropdown-item" href="lang/switchLang.php?lang=PT">Português</a>
-							<a class="dropdown-item" href="lang/switchLang.php?lang=RU">Русский</a>
-							<a class="dropdown-item" href="lang/switchLang.php?lang=TH">ภาษาไทย</a>
-							<a class="dropdown-item" href="lang/switchLang.php?lang=TR">Türkçe</a>
-							<a class="dropdown-item" href="lang/switchLang.php?lang=test">translTest</a>
 						</div>';
 		if(isset($_SESSION["accountID"]) AND $_SESSION["accountID"] != 0){
 			$userName = $gs->getAccountName($_SESSION["accountID"]);
@@ -203,6 +221,22 @@ class dashboardLib{
 		$dl = new dashboardLib();
 		$dl->printHeader($isSubdirectory);
 		$dl->printNavbar($navbar);
+		echo '<div class="container d-flex flex-column">
+				<div class="row fill d-flex justify-content-start content buffer">
+					'.$content.'
+				</div>
+			</div>';
+		$dl->printFooter();
+	}
+	public function printPage2($content){
+		echo '<div class="container d-flex flex-column">
+				<div class="row fill d-flex justify-content-start content buffer">
+					'.$content.'
+				</div>
+			</div>';
+	}
+	public function printTable($content, $isSubdirectory = true, $navbar = "home"){
+		$dl = new dashboardLib();
 		echo '<div class="container d-flex flex-column">
 				<div class="row fill d-flex justify-content-start content buffer">
 					'.$content.'

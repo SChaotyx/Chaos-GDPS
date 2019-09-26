@@ -28,7 +28,7 @@ if($mode==0){
 }else{
 	$modeColumn = "likes";
 }
-if(empty($_POST["levelID"]) OR !$_POST["levelID"]){
+if(!$_POST["levelID"]){
 	$displayLevelID = true;
 	$levelID = $ep->remove($_POST["userID"]);
 	$query = "SELECT levelID, commentID, timestamp, comment, userID, likes, isSpam, percent FROM comments WHERE userID = :levelID ORDER BY $modeColumn DESC LIMIT $count OFFSET $commentpage";
@@ -50,7 +50,8 @@ $query->execute([':levelID' => $levelID]);
 $result = $query->fetchAll();
 foreach($result as &$comment1) {
 	if($comment1["commentID"]!=""){
-		$uploadDate = date("d/m/Y G.i", $comment1["timestamp"]);
+		$uploadDate = $comment1["timestamp"];
+		$uploadDate = $gs->timeElapsed($uploadDate);
 		$actualcomment = $comment1["comment"];
 		if($gameVersion < 20){
 			$actualcomment = base64_decode($actualcomment);

@@ -8,20 +8,21 @@ $gp = new generatePass();
 require "../../incl/lib/mainLib.php";
 $gs = new mainLib();
 if(isset($_SESSION["accountID"]) AND $_SESSION["accountID"] != 0){
-	$dl->printLoginBox("<p>You are already logged in. <a href='..'>Click here to continue</a></p>");
+	$dl->printLoginBox("<p>You are already logged in. <a href=''>Click here to continue</a></p>");
 	exit();
 }
 if(isset($_POST["userName"]) AND isset($_POST["password"])){
 	$userName = $_POST["userName"];
 	$password = $_POST["password"];
 	$valid = $gp->isValidUsrname($userName, $password);
-	if($valid != 1){
-		$dl->printLoginBoxInvalid();
+	if($valid == 0){
+		$dl->printLoginBox("<p>Invalid password or nonexistant account. <a href='login/login.php'>Try again</a></p>");
 		exit();
 	}
 	$accountID = $gs->getAccountIDFromName($userName);
 	if($accountID == 0){
-		$dl->printLoginBoxError("Invalid accountID");
+		//$dl->printLoginBoxError("Invalid accountID");
+		$dl->printLoginBox("<p>Invalid password or nonexistant account. <a href='login/login.php'>Try again</a></p>");
 		exit();
 	}
 	$_SESSION["accountID"] = $accountID;
@@ -30,7 +31,7 @@ if(isset($_POST["userName"]) AND isset($_POST["password"])){
 	}elseif(isset($_SERVER["HTTP_REFERER"])){
 		header('Location: ' . $_SERVER["HTTP_REFERER"]);
 	}
-	$dl->printLoginBox("<p>You are now logged in. <a href='..'>Please click here to continue.</a></p>");
+	$dl->printLoginBox("<p>You are now logged in. <a href=''>Please click here to continue.</a></p>");
 }else{
 	$loginbox = '<form action="" method="post">
 							<div class="form-group">

@@ -5,7 +5,9 @@ include "../lib/connection.php";
 require_once "../lib/GJPCheck.php";
 require_once "../lib/exploitPatch.php";
 require_once "../lib/mainLib.php";
-$mainLib = new mainLib();
+$gs = new mainLib();
+require_once "../discord/discordLib.php";
+$dis = new discordLib();
 $ep = new exploitPatch();
 //here im getting all the data
 $gjp = $ep->remove($_POST["gjp"]);
@@ -16,10 +18,10 @@ if(!empty($_POST["binaryVersion"])){
 	$binaryVersion = 0;
 }
 $userName = $ep->remove($_POST["userName"]);
-$userName = $ep->charclean($userName);
+$userName = preg_replace("/[^A-Za-z0-9 ]/", '', $userName);
 $levelID = $ep->remove($_POST["levelID"]);
 $levelName = $ep->remove($_POST["levelName"]);
-$levelName = $ep->charclean($levelName);
+$levelName = preg_replace("/[^A-Za-z0-9 ]/", '', $levelName);
 $levelDesc = $ep->remove($_POST["levelDesc"]);
 if($gameVersion < 20){
 	$levelDesc = base64_encode($levelDesc);
@@ -114,8 +116,20 @@ if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
 } else {
 	$hostname = $_SERVER['REMOTE_ADDR'];
 }
-$userID = $mainLib->getUserID($id, $userName);
+$userID = $gs->getUserID($id, $userName);
 $uploadDate = time();
+//DETECT USER RESTRICTED
+$query6 = $db->prepare("SELECT timestamp FROM restrictions WHERE restrictiontype=:restrictiontype AND userID=:userID LIMIT 1");
+$query6->execute([':restrictiontype' => 2, ':userID' => $userID]);
+if($query6->rowCount() == 1){
+	$mutestate = $query6->fetchColumn();
+	if($mutestate == 0){
+		exit("-1");
+	}
+	if($mutestate > time()){
+		exit("-1");
+	}
+}
 $query = $db->prepare("SELECT count(*) FROM levels WHERE uploadDate > :time AND (userID = :userID OR hostname = :ip)");
 $query->execute([':time' => $uploadDate - 60, ':userID' => $userID, ':ip' => $hostname]);
 if($query->fetchColumn() > 0){
@@ -135,11 +149,17 @@ if($levelString != "" AND $levelName != ""){
 		$query->execute([':levelName' => $levelName, ':gameVersion' => $gameVersion, ':binaryVersion' => $binaryVersion, ':userName' => $userName, ':levelDesc' => $levelDesc, ':levelVersion' => $levelVersion, ':levelLength' => $levelLength, ':audioTrack' => $audioTrack, ':auto' => $auto, ':password' => $password, ':original' => $original, ':twoPlayer' => $twoPlayer, ':songID' => $songID, ':objects' => $objects, ':coins' => $coins, ':requestedStars' => $requestedStars, ':extraString' => $extraString, ':levelString' => "", ':levelInfo' => $levelInfo, ':secret' => $secret, ':levelName' => $levelName, ':id' => $id, ':uploadDate' => $uploadDate, ':unlisted' => $unlisted, ':hostname' => $hostname, ':ldm' => $ldm]);
 		file_put_contents("../../data/levels/$levelID",$levelString);
 		echo $levelID;
+		if($unlisted==0){
+			$dis->discordNotify(2, $dis->embedContent(2, $dis->title(19), $dis->diffthumbnail($levelID), $dis->embedColor(7), $dis->modBadge($id), $dis->footerText($id), $levelID, 0));
+		}
 	}else{
 		$query->execute([':levelName' => $levelName, ':gameVersion' => $gameVersion, ':binaryVersion' => $binaryVersion, ':userName' => $userName, ':levelDesc' => $levelDesc, ':levelVersion' => $levelVersion, ':levelLength' => $levelLength, ':audioTrack' => $audioTrack, ':auto' => $auto, ':password' => $password, ':original' => $original, ':twoPlayer' => $twoPlayer, ':songID' => $songID, ':objects' => $objects, ':coins' => $coins, ':requestedStars' => $requestedStars, ':extraString' => $extraString, ':levelString' => "", ':levelInfo' => $levelInfo, ':secret' => $secret, ':uploadDate' => $uploadDate, ':userID' => $userID, ':id' => $id, ':unlisted' => $unlisted, ':hostname' => $hostname, ':ldm' => $ldm]);
 		$levelID = $db->lastInsertId();
 		file_put_contents("../../data/levels/$levelID",$levelString);
 		echo $levelID;
+		if($unlisted==0){
+			$dis->discordNotify(2, $dis->embedContent(2, $dis->title(20), $dis->diffthumbnail($levelID), $dis->embedColor(7), $dis->modBadge($id), $dis->footerText($id), $levelID, 0));
+		}
 	}
 }else{
 	echo -1;

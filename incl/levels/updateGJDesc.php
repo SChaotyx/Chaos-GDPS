@@ -5,7 +5,7 @@ include "../lib/connection.php";
 require_once "../lib/GJPCheck.php";
 require_once "../lib/exploitPatch.php";
 require_once "../lib/mainLib.php";
-$mainLib = new mainLib();
+$gs = new mainLib();
 $ep = new exploitPatch();
 //here im getting all the data
 $levelDesc = $ep->remove($_POST["levelDesc"]);
@@ -23,7 +23,7 @@ if($_POST["udid"]){
 		exit("-1");
 	}
 }
-$userID = $mainLib->getUserID($id, $userName);
+$userID = $gs->getUserID($id, $userName);
 //query
 $query = $db->prepare("UPDATE levels SET levelDesc=:levelDesc WHERE levelID=:levelID AND userID=:userID");
 $GJPCheck = new GJPCheck();

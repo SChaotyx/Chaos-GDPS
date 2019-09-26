@@ -13,16 +13,22 @@ if($_POST["levelID"]){
 	} else {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
-	$query = "SELECT count(*) FROM reports WHERE levelID = :levelID AND hostname = :hostname";
-	$query = $db->prepare($query);
-	$query->execute([':levelID' => $levelID, ':hostname' => $ip]);
-
+	$query = $db->prepare("SELECT count(*) FROM actions WHERE type=:type AND value=:levelID AND value2=:ip");
+	$query->execute([':type' => 50, ':levelID' => $levelID, ':ip' => $ip]);
 	if($query->fetchColumn() == 0){
-		$query = $db->prepare("INSERT INTO reports (levelID, hostname) VALUES (:levelID, :hostname)");	
-		$query->execute([':levelID' => $levelID, ':hostname' => $ip]);
-		echo $db->lastInsertId();
-	}else{
-		echo -1;
-	}	
+		$query2 = $db->prepare("SELECT count(*) FROM reports WHERE levelID=:levelID");
+		$query2->execute([':levelID' => $levelID]);
+		if($query2->fetchColumn() == 0){
+			$query = $db->prepare("INSERT INTO reports (levelID, count) VALUES (:levelID, :count)");	
+			$query->execute([':levelID' => $levelID, ':count' => 1]);
+			$query = $db->prepare("INSERT INTO actions (type, value, timestamp, value2) VALUES (:type,:levelID, :time, :ip)");
+			$query->execute([':type' => 50, ':levelID' => $levelID, ':time' => time(), ':ip' => $ip]);
+		}else{
+			$query = $db->prepare("UPDATE reports SET count = count + 1 WHERE levelID=:levelID");	
+			$query->execute([':levelID' => $levelID]);
+			$query = $db->prepare("INSERT INTO actions (type, value, timestamp, value2) VALUES (:type,:levelID, :time, :ip)");
+			$query->execute([':type' => 50, ':levelID' => $levelID, ':time' => time(), ':ip' => $ip]);
+		}	
+	}
 }
 ?>

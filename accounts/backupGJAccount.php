@@ -2,8 +2,8 @@
 chdir(dirname(__FILE__));
 set_time_limit(0);
 ini_set("memory_limit","128M");
-ini_set("post_max_size","50M");
-ini_set("upload_max_filesize","50M");
+ini_set("post_max_size","70M");
+ini_set("upload_max_filesize","70M");
 include "../config/security.php";
 include "../incl/lib/connection.php";
 require "../incl/lib/generatePass.php";

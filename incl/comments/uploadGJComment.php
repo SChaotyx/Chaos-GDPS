@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 include "../lib/connection.php";
 require_once "../lib/mainLib.php";
-$mainLib = new mainLib();
+$gs = new mainLib();
 require_once "../lib/XORCipher.php";
 require_once "../lib/GJPCheck.php";
 require_once "../lib/exploitPatch.php";
@@ -39,11 +39,26 @@ if(!empty($_POST["accountID"]) AND $_POST["accountID"]!="0"){
 		exit("-1");
 	}
 }
-$userID = $mainLib->getUserID($id, $userName);
+$userID = $gs->getUserID($id, $userName);
 $uploadDate = time();
 $decodecomment = base64_decode($comment);
 if($cmds->doCommands($id, $decodecomment, $levelID)){
 	exit("-1");
+}
+//DETECT USER MUTED
+$query6 = $db->prepare("SELECT timestamp FROM restrictions WHERE restrictiontype=:restrictiontype AND userID=:userID LIMIT 1");
+$query6->execute([':restrictiontype' => 1, ':userID' => $userID]);
+if($query6->rowCount() == 1){
+	$mutestate = $query6->fetchColumn();
+	if($mutestate == 0){
+		echo ("-10");
+		exit;
+	}
+	if($mutestate > time()){
+		$timeleft = $mutestate - time();
+		echo ("-10");
+		exit;
+	}
 }
 if($id != "" AND $comment != ""){
 	$query = $db->prepare("INSERT INTO comments (userName, comment, levelID, userID, timeStamp, percent) VALUES (:userName, :comment, :levelID, :userID, :uploadDate, :percent)");

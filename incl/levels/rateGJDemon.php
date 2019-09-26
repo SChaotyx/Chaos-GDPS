@@ -5,8 +5,10 @@ include "../lib/connection.php";
 require_once "../lib/GJPCheck.php";
 require_once "../lib/exploitPatch.php";
 require_once "../lib/mainLib.php";
+require_once "../discord/discordLib.php";
 $gs = new mainLib();
 $ep = new exploitPatch();
+$dis = new discordLib();
 if(!isset($_POST["gjp"]) OR !isset($_POST["rating"]) OR !isset($_POST["levelID"]) OR !isset($_POST["accountID"])){
 	exit("-1");
 }
@@ -48,5 +50,6 @@ $query = $db->prepare("UPDATE levels SET starDemonDiff=:demon WHERE levelID=:lev
 $query->execute([':demon' => $dmn, ':levelID'=>$levelID]);
 $query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account) VALUES ('10', :value, :levelID, :timestamp, :id)");
 $query->execute([':value' => $dmnname, ':timestamp' => $timestamp, ':id' => $id, ':levelID' => $levelID]);
+$dis->discordNotify(1, $dis->embedContent(2, $dis->title(15), $dis->diffthumbnail($levelID), $dis->embedColor(2), $dis->modBadge($id), $dis->footerText($id)." | Level ID: $levelID", $levelID, 0));
 echo $levelID;
 ?>

@@ -14,10 +14,10 @@ if($accountID != "" AND $gjp != ""){
 	$GJPCheck = new GJPCheck();
 	$gjpresult = $GJPCheck->check($gjp,$accountID);
 	if($gjpresult == 1){
-		$permState = $gs->checkPermission($accountID, "actionRateStars");
+		$permState = $gs->checkPermission($accountID, "actionRateDifficulty");
 		if($permState){
 			$difficulty = $gs->getDiffFromStars($stars);
-			$gs->rateLevel($accountID, $levelID, 0, $difficulty["diff"], $difficulty["auto"], $difficulty["demon"]);
+			$gs->rateLevel($accountID, $levelID, 0, $difficulty["diff"], $difficulty["auto"], 0);
 			echo 1;
 		}else{
 			echo -1;

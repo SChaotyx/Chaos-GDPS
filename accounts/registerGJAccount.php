@@ -8,6 +8,9 @@ if($_POST["userName"] != ""){
 	$password = $ep->remove($_POST["password"]);
 	$email = $ep->remove($_POST["email"]);
 	$secret = "";
+	if(is_numeric($userName)){
+		exit -1;
+	}
 	//checking if name is taken
 	$query2 = $db->prepare("SELECT count(*) FROM accounts WHERE userName LIKE :userName");
 	$query2->execute([':userName' => $userName]);

@@ -181,11 +181,6 @@ class mainLib {
 				$diff = 50;
 				$demon = 1;
 				break;
-			default:
-				$diffname = "N/A: " . $stars;
-				$diff = 0;
-				$demon = 0;
-				break;
 		}
 		return array('diff' => $diff, 'auto' => $auto, 'demon' => $demon, 'name' => $diffname);
 	}
@@ -327,60 +322,6 @@ class mainLib {
 		}
 		return $gauntletname;
 	}
-
-	function makeTime($delta)
-	{
-		if ($delta < 31536000)
-		{
-			if ($delta < 2628000)
-			{
-				if ($delta < 604800)
-				{
-					if ($delta < 86400)
-					{
-						if ($delta < 3600)
-						{
-							if ($delta < 60)
-							{
-								return $delta." second".($delta == 1 ? "" : "s");
-							}
-							else
-							{
-                        					$rounded = floor($delta / 60);
-								return $rounded." minute".($rounded == 1 ? "" : "s");
-							}
-						}
-						else
-						{
-							$rounded = floor($delta / 3600);
-							return $rounded." hour".($rounded == 1 ? "" : "s");
-						}
-					}
-					else
-					{
-						$rounded = floor($delta / 86400);
-						return $rounded." day".($rounded == 1 ? "" : "s");
-					}
-				}
-				else
-				{
-					$rounded = floor($delta / 604800);
-					return $rounded." week".($rounded == 1 ? "" : "s");
-				}
-			}
-			else
-			{
-				$rounded = floor($delta / 2628000); 
-				return $rounded." month".($rounded == 1 ? "" : "s");
-			}
-		}
-		else
-		{
-			$rounded = floor($delta / 31536000);
-			return $rounded." year".($rounded == 1 ? "" : "s");
-		}
-	}
-
 	public function getUserID($extID, $userName = "Undefined") {
 		include __DIR__ . "/connection.php";
 		if(is_numeric($extID)){
@@ -485,7 +426,7 @@ class mainLib {
 		//echo $url;
 		$crl = curl_init($url);
 		$headr = array();
-		$headr['User-Agent'] = 'CvoltonGDPS (http://pi.michaelbrabec.cz:9010, 1.0)';
+		$headr['User-Agent'] = 'SChaotyxGDPS (http://arafrybb.000webhostapp.com, 1.0)';
 		curl_setopt($crl, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
 		curl_setopt($crl, CURLOPT_POSTFIELDS, $data_string);
 		$headr[] = 'Content-type: application/json';
@@ -503,7 +444,7 @@ class mainLib {
 		//echo $url;
 		$crl = curl_init($url);
 		$headr = array();
-		$headr['User-Agent'] = 'CvoltonGDPS (http://pi.michaelbrabec.cz:9010, 1.0)';
+		$headr['User-Agent'] = 'SChaotyxGDPS (http://arafrybb.000webhostapp.com, 1.0)';
 		curl_setopt($crl, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
 		curl_setopt($crl, CURLOPT_POSTFIELDS, $data_string);
 		$headr[] = 'Content-type: application/json';
@@ -520,7 +461,7 @@ class mainLib {
 		$url = "https://discordapp.com/api/v6/users/".$discordID;
 		$crl = curl_init($url);
 		$headr = array();
-		$headr['User-Agent'] = 'CvoltonGDPS (http://pi.michaelbrabec.cz:9010, 1.0)';
+		$headr['User-Agent'] = 'SChaotyxGDPS (http://arafrybb.000webhostapp.com, 1.0)';
 		$headr[] = 'Content-type: application/json';
 		$headr[] = 'Authorization: Bot '.$bottoken;
 		curl_setopt($crl, CURLOPT_HTTPHEADER,$headr);
@@ -603,35 +544,15 @@ class mainLib {
 		}
 		return false;
 	}
-	public function isCloudFlareIP($ip) {
-    	$cf_ips = array(
-	        '173.245.48.0/20',
-			'103.21.244.0/22',
-			'103.22.200.0/22',
-			'103.31.4.0/22',
-			'141.101.64.0/18',
-			'108.162.192.0/18',
-			'190.93.240.0/20',
-			'188.114.96.0/20',
-			'197.234.240.0/22',
-			'198.41.128.0/17',
-			'162.158.0.0/15',
-			'104.16.0.0/12',
-			'172.64.0.0/13',
-			'131.0.72.0/22'
-	    );
-	    foreach ($cf_ips as $cf_ip) {
-	        if (ip_in_range($ip, $cf_ip)) {
-	            return true;
-	        }
-	    }
-	    return false;
-	}
 	public function getIP(){
-		if (isset($_SERVER["HTTP_CF_CONNECTING_IP"]) && $this->isCloudFlareIP($_SERVER['REMOTE_ADDR'])) {
-  			return $_SERVER["HTTP_CF_CONNECTING_IP"];
+		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+			$ip = $_SERVER['HTTP_CLIENT_IP'];
+		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		} else {
+			$ip = $_SERVER['REMOTE_ADDR'];
 		}
-		return $_SERVER['REMOTE_ADDR'];
+		return $ip;
 	}
 	public function checkModIPPermission($permission){
 		include __DIR__ . "/connection.php";
@@ -722,21 +643,32 @@ class mainLib {
 		$role = $query->fetch();
 		return $role["commentColor"];
 	}
-	public function rateLevel($accountID, $levelID, $stars, $difficulty, $auto, $demon){
+	public function rateLevel($accountID, $levelID, $stars, $difficulty, $auto, $demon, $feature){
 		include __DIR__ . "/connection.php";
+		$gs = new mainLib();
+		$rateDate = $gs->getLevelValue($levelID, "rateDate");
+		if($rateDate == 0){
+			$rateDate = time();
+		}
 		//lets assume the perms check is done properly before
-		$query = "UPDATE levels SET starDemon=:demon, starAuto=:auto, starDifficulty=:diff, starStars=:stars, rateDate=:now WHERE levelID=:levelID";
+		$query = "UPDATE levels SET starDemon=:demon, starAuto=:auto, starDifficulty=:diff, starStars=:stars, rateDate=:now, starCoins='1', starFeatured=:feature, starEpic='0' WHERE levelID=:levelID";
 		$query = $db->prepare($query);	
-		$query->execute([':demon' => $demon, ':auto' => $auto, ':diff' => $difficulty, ':stars' => $stars, ':levelID'=>$levelID, ':now' => time()]);
-		
-		$query = $db->prepare("INSERT INTO modactions (type, value, value2, value3, timestamp, account) VALUES ('1', :value, :value2, :levelID, :timestamp, :id)");
-		$query->execute([':value' => $this->getDiffFromStars($stars)["name"], ':timestamp' => time(), ':id' => $accountID, ':value2' => $stars, ':levelID' => $levelID]);
-		
-		
+		$query->execute([':demon' => $demon, ':auto' => $auto, ':diff' => $difficulty, ':stars' => $stars, ':levelID'=>$levelID, ':now' =>$rateDate, ':feature'=>$feature]);	
+		//check mod action
+		$query = $db->prepare("SELECT count(*) FROM modactions WHERE type=:type AND value3=:itemID AND account=:account");
+		$query->execute([':type' => 1, ':itemID' => $levelID, ':account' => $accountID]);
+		if($query->fetchColumn() < 1){
+			$query = $db->prepare("INSERT INTO modactions (type, value, value2, value3, timestamp, account) VALUES ('1', :value, :value2, :levelID, :timestamp, :id)");
+			$query->execute([':value' => $this->getDiffFromStars($stars)["name"], ':timestamp' => time(), ':id' => $accountID, ':value2' => $stars, ':levelID' => $levelID]);
+		}else{
+			$query = $db->prepare("UPDATE modactions SET type=1, value=:value, value2=:value2, value3=:levelID, timestamp=:timestamp, account=:id WHERE type=1 AND value3=:levelID AND account=:id");
+			$query->execute([':value' => $this->getDiffFromStars($stars)["name"], ':timestamp' => time(), ':id' => $accountID, ':value2' => $stars, ':levelID' => $levelID]);
+		}	
 	}
+	/*
 	public function featureLevel($accountID, $levelID, $feature){
 		include __DIR__ . "/connection.php";
-		$query = "UPDATE levels SET starFeatured=:feature, rateDate=:now WHERE levelID=:levelID";
+		$query = "UPDATE levels SET starFeatured=:feature, rateDate=:now, starEpic='0' WHERE levelID=:levelID";
 		$query = $db->prepare($query);	
 		$query->execute([':feature' => $feature, ':levelID'=>$levelID, ':now' => time()]);
 		$query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account) VALUES ('2', :value, :levelID, :timestamp, :id)");
@@ -750,6 +682,18 @@ class mainLib {
 		
 		$query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account) VALUES ('3', :value, :levelID, :timestamp, :id)");
 		$query->execute([':value' => $coins, ':timestamp' => time(), ':id' => $accountID, ':levelID' => $levelID]);
+	}
+	*/
+	public function getRating($levelID) {
+		include __DIR__ . "/connection.php";
+		$query = $db->prepare("SELECT starStars FROM levels WHERE levelID = :levelid");
+		$query->execute([':levelid' => $levelID]);
+		if ($query->rowCount() > 0) {
+			$starStars = $query->fetchColumn();
+		} else {
+			$starStars= false;
+		}
+		return $starStars;
 	}
 	public function songReupload($url){
 		require __DIR__ . "/../../incl/lib/connection.php";
@@ -809,4 +753,172 @@ class mainLib {
 		curl_close($ch);
 		return $size;
 	}
+	
+	//SCHAOTYX ADD THIS//
+	
+	//SENDLEVEL V3.1
+	public function sendLevel($accountID, $levelID, $stars, $feature){
+	    include __DIR__ . "/connection.php";
+		//send level to "SentLevels"
+		$query=$db->prepare("UPDATE levels SET issend=1, sendtime=:sendtime, sendstars=:sendstars, sendrate=:sendrate WHERE levelID=:levelID");	
+		$query->execute([':sendtime' => time(), ':sendstars' => $stars, ':sendrate' => $feature, ':levelID'=>$levelID]);
+		//check mod action
+		$query = $db->prepare("SELECT count(*) FROM modactions WHERE type=:type AND value3=:itemID AND account=:account");
+		$query->execute([':type' => 100, ':itemID' => $levelID, ':account' => $accountID]);
+		if($query->fetchColumn() < 1){
+			$query=$db->prepare("UPDATE levels SET sendcount = sendcount +1 WHERE levelID=:levelID");	
+			$query->execute([':levelID'=>$levelID]);
+			$query = $db->prepare("INSERT INTO modactions (type, value3, timestamp, account) VALUES (:type,:itemID, :time, :account)");
+			$query->execute([':type' => 100, ':itemID' => $levelID, ':time' => time(), ':account' => $accountID]);
+		}else{
+			$query=$db->prepare("UPDATE modactions SET type=:type, value3=:itemID, timestamp=:time, account=:account WHERE type=:type AND value3=:itemID AND account=:account");
+			$query->execute([':type' => 100, ':itemID' => $levelID, ':time' => time(), ':account' => $accountID]);
+		}
+	}
+	public function rateDifficulty($accountID, $levelID, $difficulty, $auto){
+		include __DIR__ . "/connection.php";
+		$query = $db->prepare("UPDATE levels SET starAuto=:auto, starDifficulty=:diff WHERE levelID=:levelID");	
+		$query->execute([':auto' => $auto, ':diff' => $difficulty, ':levelID'=>$levelID]);
+	}
+	//GET DATA
+	public function getLevelName($levelID) {
+		include __DIR__ . "/connection.php";
+		$query = $db->prepare("SELECT levelName FROM levels WHERE levelID = :lvlid");
+		$query->execute([':lvlid' => $levelID]);
+		if ($query->rowCount() > 0) {
+			$levelName = $query->fetchColumn();
+		} else {
+			$levelName = false;
+		}
+		return $levelName;
+	}
+	public function getAuthor($levelID) {
+		include __DIR__ . "/connection.php";
+		$query = $db->prepare("SELECT userName FROM levels WHERE levelID = :lvlid");
+		$query->execute([':lvlid' => $levelID]);
+		if ($query->rowCount() > 0) {
+			$userName = $query->fetchColumn();
+		} else {
+			$userName = false;
+		}
+		return $userName;
+	}
+	//MultiFuncional
+	public function getLevelValue($levelID, $value) {
+		include __DIR__ . "/connection.php";
+		$query = $db->prepare("SELECT $value FROM levels WHERE levelID=:levelID");
+		$query->execute([':levelID' => $levelID]);
+		$result = $query->fetchAll();
+		foreach($result as &$level){
+		$value = $level["$value"];
+		}
+		return $value;
+	}
+	public function getValue($value1, $value2, $value3, $value4) {
+		include __DIR__ . "/connection.php";
+		$query = $db->prepare("SELECT $value1 FROM $value2 WHERE $value3=$value4");
+		$query->execute();
+		$result = $query->fetchAll();
+		foreach($result as &$level){
+		$value = $level["$value1"];
+		}
+		return $value;
+	}
+	//TIMEAGO
+    public function timeElapsed($timestamp){
+    $etime = time() - $timestamp;
+    if ($etime < 1){
+        return '0 seconds';
+    }
+    $a = array(
+	    31536000  =>  'year',
+        2592000  =>  'month',
+	    604800  =>  'week',
+        86400  =>  'day',
+        3600  =>  'hour',
+        60  =>  'minute',
+        1  =>  'second');
+    $a_plural = array(
+	    'year'   => 'years',
+        'month'  => 'months',
+	    'week'    => 'weeks',
+        'day'    => 'days',
+        'hour'   => 'hours',
+        'minute' => 'minutes',
+        'second' => 'seconds');
+    foreach ($a as $secs => $str){
+        $d = $etime / $secs;
+        if ($d >= 1){
+            $r = round($d);
+            return $r . ' ' . ($r > 1 ? $a_plural[$str] : $str);
+        }
+    }
+}
+    public function timeElapsed2($timestamp){
+    $etime = time() - $timestamp;
+    if ($etime < 1){
+        return '0 seconds';
+    }
+    $a = array(
+	    86400  =>  'day',
+        3600  =>  'hour',
+        60  =>  'minute',
+        1  =>  'second');
+    $a_plural = array( 
+	    'day'    => 'days',
+        'hour'   => 'hours',
+        'minute' => 'minutes',
+        'second' => 'seconds');
+    foreach ($a as $secs => $str){
+        $d = $etime / $secs;
+        if ($d >= 1){
+            $r = round($d);
+            return $r . ' ' . ($r > 1 ? $a_plural[$str] : $str) . ' ago';
+        }
+    }
+}
+	//UPDATE CP V1.2 (gauntlet cp's count | length medium starred levels 1 cp)
+  public function updatecp($levelID){
+	include __DIR__ . "/connection.php";
+	//getting userID
+	$query = $db->prepare("SELECT userID FROM levels WHERE levelID = :lvlid AND isDeleted = 0");
+	$query->execute([':lvlid' => $levelID]);
+	if ($query->rowCount() > 0) {
+	$userID = $query->fetchColumn();
+	//getting starred lvls count
+	$query2 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starStars != 0 AND levelLength > 2");
+	$query2->execute([':userID' => $userID]);
+	$creatorpoints = $query2->fetchColumn();
+	//getting featured lvls count
+	$query3 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starFeatured != 0 AND levelLength > 2");
+	$query3->execute([':userID' => $userID]);
+	$cpgain = $query3->fetchColumn();
+	$creatorpoints = $creatorpoints + $cpgain;
+	//getting epic lvls count
+	$query3 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starEpic != 0 AND levelLength > 2");
+	$query3->execute([':userID' => $userID]);
+	$cpgain = $query3->fetchColumn();
+	$creatorpoints = $creatorpoints + $cpgain;
+	//getting starred medium lvls count
+	$query4 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starStars != 0 AND levelLength = 2");
+	$query4->execute([':userID' => $userID]);
+	$cpgain = $query4->fetchColumn();
+	$creatorpoints = $creatorpoints + $cpgain;
+	//getting gauntlet levels count
+	$query6 = $db->prepare("SELECT level1, level2, level3, level4, level5 FROM gauntlets");
+	$query6->execute();
+	$levelgauntlet = $query6->fetchAll();
+	foreach($levelgauntlet as $gauntlet){
+		for($x = 1; $x < 6; $x++){
+			$query7 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND levelID = :levelIDgauntlet");
+			$query7->execute([':userID' => $userID, ':levelIDgauntlet' => $gauntlet["level".$x]]);
+			$cpgain = $query7->fetchColumn();
+			$creatorpoints = $creatorpoints + $cpgain;
+		}
+	}
+	//inserting cp value
+	$query8 = $db->prepare("UPDATE users SET creatorPoints = :creatorpoints WHERE userID=:userID");
+	$query8->execute([':userID' => $userID, ':creatorpoints' => $creatorpoints]);
+	}
+  }
 }
