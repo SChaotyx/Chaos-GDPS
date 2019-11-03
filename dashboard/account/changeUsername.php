@@ -20,6 +20,10 @@ if(!empty($_POST["userName"]) AND !empty($_POST["newusr"]) AND !empty($_POST["pa
 	if ($pass == 1) {
 		$query = $db->prepare("UPDATE accounts SET username=:newusr WHERE userName=:userName");	
 		$query->execute([':newusr' => $newusr, ':userName' => $userName]);
+		$query = $db->prepare("UPDATE users SET userName=:newusr WHERE extID=:accountID");	
+		$query->execute([':newusr' => $newusr, ':accountID' => $_SESSION["accountID"]]);
+		$query = $db->prepare("UPDATE levels SET userName=:newusr WHERE extID=:accountID");	
+		$query->execute([':newusr' => $newusr, ':accountID' => $_SESSION["accountID"]]);
 		if($query->rowCount()==0){
 			$dl->printBox("<h1>".$dl->getLocalizedString("changeUsername").'</h1>
 	                       <p>Invalid password or nonexistant account. <a href="account/changeUsername.php">Try again</a></p>');

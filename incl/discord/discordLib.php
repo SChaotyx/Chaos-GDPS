@@ -224,7 +224,7 @@ class discordLib {
 						$songname = $song["name"];
 						$songauthor = $song["authorName"];
 						$songsize = $song["size"];	
-						$songdesc =  "__".$songname."__by $songauthor";
+						$songdesc =  "__".$songname."__ by $songauthor";
 						if($songID < 5100000){
 							$downloadmp3 = rawurldecode($song["download"]);
 							$songinfo = 
@@ -297,7 +297,7 @@ class discordLib {
 			}
 		}
 		//LEVEL DATA
-		$levelby = "$icon_play __$levelName __by $userName";
+		$levelby = "$icon_play __".$levelName."__ by $userName";
 		$description = "**Description:** $desc";
 		$usercoins = "Coins: $coinscount";
 		$stats = 
@@ -312,7 +312,7 @@ class discordLib {
 			"**Objects count:** $objects $overObjects \n".
 			"**Stars requested:** $requestedStars \n".
 			"$copylevel";
-		$levelbyc = "$icon_play __$levelName __by $userName $copylevelc $overObjects";
+		$levelbyc = "$icon_play __".$levelName."__ by $userName $copylevelc $overObjects";
 		$songdatac = 
 		    ":musical_note: $songdesc \n".
 		    "LevelID: $levelID";
@@ -322,7 +322,7 @@ class discordLib {
 		$dailyinqueque = "New Daily/weekly level queued!";
 		$isout = "$icon_length __Is out:__ $stars";
 		$oldacc = "Old Account: **$userName**";
-		$levelbynew = "$icon_play __$levelName __by $stars $copylevelc $overObjects";
+		$levelbynew = "$icon_play __".$levelName."__ by $stars $copylevelc $overObjects";
 		$levelInfo = " | Level ID: $levelID";
 		//Build json
 		switch($id){
