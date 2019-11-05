@@ -50,6 +50,6 @@ $query = $db->prepare("UPDATE levels SET starDemonDiff=:demon WHERE levelID=:lev
 $query->execute([':demon' => $dmn, ':levelID'=>$levelID]);
 $query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account) VALUES ('10', :value, :levelID, :timestamp, :id)");
 $query->execute([':value' => $dmnname, ':timestamp' => $timestamp, ':id' => $id, ':levelID' => $levelID]);
-$dis->discordNotify(1, $dis->embedContent(2, $dis->title(15), $dis->diffthumbnail($levelID), $dis->embedColor(2), $dis->modBadge($id), $dis->footerText($id)." | Level ID: $levelID", $levelID, 0));
+$dis->discordNotifyNew(1, $levelID, 1, 2, 15, 2, 1, 1, 0, 0);
 echo $levelID;
 ?>

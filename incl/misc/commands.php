@@ -45,13 +45,13 @@ class Commands {
 			$query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account) VALUES ('16', :value, :levelID, :timestamp, :id)");
 			$query->execute([':value' => "0", ':timestamp' => $uploadDate, ':id' => $accountID, ':levelID' => $levelID]);
 			//discord notify
-			$dis->discordNotify(1, $dis->embedContent(2, $dis->title(3), $dis->diffthumbnail($levelID), $dis->embedColor(3), $dis->modBadge($accountID), $dis->footerText($accountID), $levelID, 0));
+			$dis->discordNotifyNew(1, $levelID, 1, 2, 3, 3, $accountID, 1, 0, 0);
 			return true;
 		}
 		if(substr($comment,0,8) == '!played' AND $gs->checkPermission($accountID, "elderCommands")){
 			$query = $db->prepare("UPDATE levels SET israted='1' WHERE levelID=:levelID");
 			$query->execute([':levelID' => $levelID]);
-			$dis->discordNotify(1, $dis->embedContent(2, $dis->title(4), $dis->diffthumbnail($levelID), $dis->embedColor(5), $dis->modBadge($accountID), $dis->footerText($accountID), $levelID, 0));
+			$dis->discordNotifyNew(1, $levelID, 1, 2, 4, 5, $accountID, 1, 0, 0);
 		return true;
 		}
 		if(substr($comment,0,8) == '!feature' AND $gs->checkPermission($accountID, "elderCommands")){
@@ -66,9 +66,7 @@ class Commands {
 			$gs->updatecp($levelID);
 			$query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account) VALUES ('2', :value, :levelID, :timestamp, :id)");
 			$query->execute([':value' => "1", ':timestamp' => $uploadDate, ':id' => $accountID, ':levelID' => $levelID]);
-			$discordString = $dis->embedContent(2, $dis->title(5), $dis->diffthumbnail($levelID), $dis->embedColor(1), $dis->modBadge($accountID), $dis->footerText($accountID), $levelID, 0);
-			$dis->discordNotify(1, $discordString);
-			//$dis->discordDMNotify(1, $levelID, $discordString);
+			$dis->discordNotifyNew(1, $levelID, 1, 2, 5, 1, $accountID, 1, 0, 0);
 			return true;
 			}
 		}
@@ -84,7 +82,7 @@ class Commands {
 			$gs->updatecp($levelID);
 			$query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account) VALUES ('2', :value, :levelID, :timestamp, :id)");
 			$query->execute([':value' => "0", ':timestamp' => $uploadDate, ':id' => $accountID, ':levelID' => $levelID]);
-			$dis->discordNotify(1, $dis->embedContent(2, $dis->title(6), $dis->diffthumbnail($levelID), $dis->embedColor(4), $dis->modBadge($accountID), $dis->footerText($accountID), $levelID, 0));
+			$dis->discordNotifyNew(1, $levelID, 1, 2, 6, 4, $accountID, 1, 0, 0);
 			return true;
 		}
 		if(substr($comment,0,5) == '!epic' AND $gs->checkPermission($accountID, "elderCommands")){
@@ -101,7 +99,7 @@ class Commands {
 			$gs->updatecp($levelID);
 			$query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account) VALUES ('4', :value, :levelID, :timestamp, :id)");
 			$query->execute([':value' => "1", ':timestamp' => $uploadDate, ':id' => $accountID, ':levelID' => $levelID]);
-			$dis->discordNotify(1, $dis->embedContent(2, $dis->title(7), $dis->diffthumbnail($levelID), $dis->embedColor(1), $dis->modBadge($accountID), $dis->footerText($accountID), $levelID, 0));
+			$dis->discordNotifyNew(1, $levelID, 1, 2, 7, 1, $accountID, 1, 0, 0);
 			return true;
 			}
 		}
@@ -115,8 +113,8 @@ class Commands {
 			$gs->updatecp($levelID);
 			$query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account) VALUES ('4', :value, :levelID, :timestamp, :id)");
 			$query->execute([':value' => "0", ':timestamp' => $uploadDate, ':id' => $accountID, ':levelID' => $levelID]);
-			$dis->discordNotify(1, $dis->embedContent(2, $dis->title(8), $dis->diffthumbnail($levelID), $dis->embedColor(4), $dis->modBadge($accountID), $dis->footerText($accountID), $levelID, 0));
-				return true;
+			$dis->discordNotifyNew(1, $levelID, 1, 2, 8, 4, $accountID, 1, 0, 0);
+			return true;
 		}
 		if(substr($comment,0,12) == '!verifycoins' AND $gs->checkPermission($accountID, "elderCommands")){
 			$starred = $gs->getLevelValue($levelID, "starStars");
@@ -128,7 +126,7 @@ class Commands {
 			$query->execute([':levelID' => $levelID]);
 			$query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account) VALUES ('3', :value, :levelID, :timestamp, :id)");
 			$query->execute([':value' => "1", ':timestamp' => $uploadDate, ':id' => $accountID, ':levelID' => $levelID]);
-			$dis->discordNotify(1, $dis->embedContent(2, $dis->title(9), $dis->diffthumbnail($levelID), $dis->embedColor(2), $dis->modBadge($accountID), $dis->footerText($accountID), $levelID, 0));
+			$dis->discordNotifyNew(1, $levelID, 1, 2, 9, 2, $accountID, 1, 0, 0);
 			return true;
 			}
 		}
@@ -140,7 +138,7 @@ class Commands {
 			$query->execute([':levelID' => $levelID]);
 			$query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account) VALUES ('3', :value, :levelID, :timestamp, :id)");
 			$query->execute([':value' => "0", ':timestamp' => $uploadDate, ':id' => $accountID, ':levelID' => $levelID]);
-			$dis->discordNotify(1, $dis->embedContent(2, $dis->title(10), $dis->diffthumbnail($levelID), $dis->embedColor(4), $dis->modBadge($accountID), $dis->footerText($accountID), $levelID, 0));
+			$dis->discordNotifyNew(1, $levelID, 1, 2, 10, 4, $accountID, 1, 0, 0);
 			return true;
 		}
 		//MUTE v1.1
@@ -203,7 +201,8 @@ class Commands {
 				$query->execute([':levelID' => $levelID, ':uploadDate' => $timestamp]);
 			$query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account, value2, value4) VALUES ('5', :value, :levelID, :timestamp, :id, :dailytime, 0)");
 			$query->execute([':value' => "1", ':timestamp' => $uploadDate, ':id' => $accountID, ':levelID' => $levelID, ':dailytime' => $timestamp]);
-			$dis->discordNotify(1, $dis->embedContent(4, $dis->title(11), $dis->diffthumbnail($levelID), $dis->embedColor(6), $dis->modBadge($accountID), $dis->footerText($accountID), $levelID, date("d/m/Y", $timestamp - 1)));
+			$date = date("d/m/Y", $timestamp - 1);
+			$dis->discordNotifyNew(1, $levelID, 1, 4, 11, 6, $accountID, 1, 0, $date);
 			return true;
 		}
 		if(substr($comment,0,7) == '!weekly' AND $gs->checkPermission($accountID, "commandDaily")){
@@ -225,14 +224,15 @@ class Commands {
 			$query->execute([':levelID' => $levelID, ':uploadDate' => $timestamp]);
 			$query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account, value2, value4) VALUES ('5', :value, :levelID, :timestamp, :id, :dailytime, 1)");
 			$query->execute([':value' => "1", ':timestamp' => $uploadDate, ':id' => $accountID, ':levelID' => $levelID, ':dailytime' => $timestamp]);
-			$dis->discordNotify(1, $dis->embedContent(4, $dis->title(12), $dis->diffthumbnail($levelID), $dis->embedColor(6), $dis->modBadge($accountID), $dis->footerText($accountID), $levelID, date("d/m/Y", $timestamp - 1)));
+			$date = date("d/m/Y", $timestamp - 1);
+			$dis->discordNotifyNew(1, $levelID, 1, 4, 12, 6, $accountID, 1, 0, $date);
 			return true;
 		}
 		if(substr($comment,0,6) == '!delet' AND $gs->checkPermission($accountID, "adminCommands")){
 			if(!is_numeric($levelID)){
 				return false;
 			}
-			$dis->discordNotify(1, $dis->embedContent(2, $dis->title(13), $dis->thumbnail(11), $dis->embedColor(3), $dis->modBadge($accountID), $dis->footerText($accountID), $levelID, 0));
+			$dis->discordNotifyNew(1, $levelID, 1, 2, 13, 3, $accountID, 2, 11, 0);
 			$query = $db->prepare("DELETE from levels WHERE levelID=:levelID LIMIT 1");
 			$query->execute([':levelID' => $levelID]);
 			$query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account) VALUES ('6', :value, :levelID, :timestamp, :id)");
@@ -253,7 +253,7 @@ class Commands {
 			$query = $db->prepare("SELECT userID FROM users WHERE extID = :extID LIMIT 1");
 			$query->execute([':extID' => $targetAcc]);
 			$userID = $query->fetchColumn();
-			$dis->discordNotify(1, $dis->embedContent(5, $dis->title(14), $dis->thumbnail(12), $dis->embedColor(6), $dis->modBadge($accountID), $dis->footerText($accountID), $levelID, $commentarray[1]));
+			$dis->discordNotifyNew(1, $levelID, 1, 5, 14, 6, $accountID, 2, 12, $commentarray[1]);
 			$query = $db->prepare("UPDATE levels SET extID=:extID, userID=:userID, userName=:userName WHERE levelID=:levelID");
 			$query->execute([':extID' => $targetAcc["accountID"], ':userID' => $userID, ':userName' => $commentarray[1], ':levelID' => $levelID]);
 			$query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account) VALUES ('7', :value, :levelID, :timestamp, :id)");
@@ -436,9 +436,9 @@ class Commands {
 			$query->execute([':roleID' => $roleID, ':accountID' => $targetAccID]);
 		}
 		if($roleID==1){
-			$dis->discordNotify(1, $dis->accEmbedContent(1, $dis->title(17), $dis->iconProfile($targetAccID), $dis->embedColor(7), $dis->modBadge($accountID), $dis->footerText($accountID), $targetAccID, 0));
+			$dis->discordNotifyNew(1, $targetAccID, 2, 1, 17, 7, $accountID, 0, 0, 0);
 		}else{
-			$dis->discordNotify(1, $dis->accEmbedContent(1, $dis->title($titleID), $dis->iconProfile($targetAccID), $dis->embedColor(7), $dis->modBadge($accountID), $dis->footerText($accountID), $targetAccID, 0));
+			$dis->discordNotifyNew(1, $targetAccID, 2, 1, $titleID, 7, $accountID, 0, 0, 0);
 		}
 		return true;
 		}

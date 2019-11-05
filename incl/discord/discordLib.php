@@ -28,6 +28,82 @@ class discordLib {
 		curl_close($crl);
 	return $response;
 	}
+	public function discordNotifyNew($id, $objectID, $objectType, $embedID, $title, $color, $autorID, $thumbType, $thumbID, $extra){
+		//$dis->discordNotifyNew(channel, objid, objtype, embedid, title, color, autorid, thumbtype, thumbid, extra);
+		include __DIR__ . "/../lib/connection.php";
+		include __DIR__ . "/../../config/discord.php";
+		if($discordEnabled != 1){
+			return false;
+		}
+		switch($id){
+			case 1: $channelID = $channel1;
+			break;
+			case 2: $channelID = $channel2;
+			break;
+			default: $channelID = $id;
+			break;
+		}
+		if($objectType == 1){
+			switch($thumbType){
+				case 1: $data_string = $this->embedContent($embedID, $this->title($title), $this->diffthumbnail($objectID), $this->embedColor($color), $this->modBadge($autorID), $this->footerText($autorID), $objectID, $extra);
+				break;
+				case 2: $data_string = $this->embedContent($embedID, $this->title($title), $this->thumbnail($thumbID), $this->embedColor($color), $this->modBadge($autorID), $this->footerText($autorID), $objectID, $extra);
+				break;
+				case 3: $data_string = $this->embedContent($embedID, $this->title($title), $this->iconSent($extra, $thumbID), $this->embedColor($color), $this->modBadge($autorID), $this->footerText($autorID), $objectID, $extra);
+				break;
+			}
+			$query = $db->prepare("SELECT extID FROM levels WHERE levelID = :id");
+			$query->execute([':id' => $objectID]);
+			$objectID = $query->fetchColumn();
+		}
+		if($objectType == 2){
+			$data_string = $this->accEmbedContent($embedID, $this->title($title), $this->iconProfile($objectID), $this->embedColor($color), $this->modBadge($autorID), $this->footerText($autorID), $objectID, $extra);
+		}
+		//DM NOTIFY
+		$query = $db->prepare("SELECT discordID, discordLinkReq FROM accounts WHERE accountID = :id");
+		$query->execute([':id' => $objectID]);
+		$result = $query->fetchAll();
+		foreach($result as &$discordData){
+		$discordID = $discordData["discordID"];
+		$discordReq = $discordData["discordLinkReq"];
+		}
+		if($discordReq == 1){
+			switch($title){
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+				case 10:
+				case 11:
+				case 12:
+				case 16:
+				case 17:
+				case 26:
+				case 27:
+				$this->discordDMNotify($discordID, $data_string); 
+				break;
+			}
+		}
+		$url = "https://discordapp.com/api/v6/channels/$channelID/messages";
+		//echo $url;
+		$crl = curl_init($url);
+		$headr = array();
+		$headr['User-Agent'] = 'Chaos-Bot, 1.1)';
+		curl_setopt($crl, CURLOPT_CUSTOMREQUEST, "POST");                                                                 
+		curl_setopt($crl, CURLOPT_POSTFIELDS, $data_string);
+		$headr[] = 'Content-type: application/json';
+		$headr[] = 'Authorization: Bot '.$bottoken;
+		curl_setopt($crl, CURLOPT_HTTPHEADER,$headr);
+		curl_setopt($crl, CURLOPT_RETURNTRANSFER, 1); 
+		$response = curl_exec($crl);
+		curl_close($crl);
+		return $response;
+	}
 	public function discordDMNotify($discordID, $data_string){
 		include __DIR__ . "/../lib/connection.php";
 		include __DIR__ . "/../../config/discord.php";
@@ -150,6 +226,7 @@ class discordLib {
 			$original = $level["original"];
 			$audioTrack = $level["audioTrack"];
 			$songID = $level["songID"];
+			$extID = $level["extID"];
 			if($songID == 0){
 				$songinfo = "";
 				switch($audioTrack){
@@ -786,6 +863,9 @@ class discordLib {
 	}
 	public function modBadge($accountID){
 		include __DIR__ . "/../lib/connection.php";
+		if($accountID == 1){
+			return "misc/gdpsbot.png";
+		}
 		$query = $db->prepare("SELECT roleID FROM roleassign WHERE accountID = :id");
 		$query->execute([':id' => $accountID]);
 		$roleID = $query->fetchColumn();
@@ -811,6 +891,9 @@ class discordLib {
 	}
 	public function footerText($accountID){
 		include __DIR__ . "/../lib/connection.php";
+		if($accountID == 1){
+			return "Chaos-Bot";
+		}
 		//DETECT MOD
 		$query = $db->prepare("SELECT userName FROM accounts WHERE accountID = :id");
 		$query->execute([':id' => $accountID]);

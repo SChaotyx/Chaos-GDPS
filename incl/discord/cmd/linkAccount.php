@@ -29,7 +29,7 @@ $query->execute([':accountID' => $accountID]);
 $userInfo = $query->fetchAll()[0];
 $linkStatus = $userInfo["discordLinkReq"];
 $usertag2 = $userInfo["discordTag"];
-if($linkStatus === 1){
+if($linkStatus == 1){
     $nothing = "<@".$_POST['tagID'].">, esta cuenta ya esta enlazada a ".$usertag2;
 	$data = array("content"=> $nothing);                                               
 	$data_string = json_encode($data);

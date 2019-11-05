@@ -25,6 +25,7 @@ if($query->rowCount() == 0){
 }
 $levelID = $query->fetchColumn();
 $tag = "<@".$_POST['tagID'].">, here is the result of your search.";
-$dis->discordNotify($channelID, $dis->embedContent(6, $dis->title(21), $dis->diffthumbnail($levelID), $dis->embedColor(7), "misc/auto.png", "Chaos-Bot", $levelID, $tag));
+$dis->discordNotifyNew($channelID, $levelID, 1, 6, 21, 7, 1, 1, 0, $tag);
+//$dis->discordNotify($channelID, $dis->embedContent(6, $dis->title(21), $dis->diffthumbnail($levelID), $dis->embedColor(7), "misc/auto.png", "Chaos-Bot", $levelID, $tag));
 echo "level command: $lvl found!";
 ?>

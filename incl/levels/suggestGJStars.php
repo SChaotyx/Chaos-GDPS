@@ -29,7 +29,7 @@ if($accountID != "" AND $gjp != ""){
 				$difficulty = $gs->getDiffFromStars($stars);
 				$gs->rateLevel($accountID, $levelID, $stars, $difficulty["diff"], $difficulty["auto"], $difficulty["demon"], $feature);
 				$gs->updatecp($levelID);
-				$dis->discordNotify(1, $dis->embedContent(2, $dis->title(1), $dis->diffthumbnail($levelID), $dis->embedColor(1), $dis->modBadge($accountID), $dis->footerText($accountID)." | Level ID: $levelID", $levelID, 0));
+				$dis->discordNotifyNew(1, $levelID, 1, 2, 1, 1, $accountID, 1, 0, 0);
 				echo 1;
 				}
 			}
@@ -39,7 +39,7 @@ if($accountID != "" AND $gjp != ""){
 					$difficulty = $gs->getDiffFromStars($stars);
 					$gs->sendLevel($accountID, $levelID, $stars, $feature, $difficulty["diff"], $difficulty["auto"]);
 					$gs->rateDifficulty($accountID, $levelID, $difficulty["diff"], $difficulty["auto"]);
-					$dis->discordNotify(1, $dis->embedContent(2, $dis->title(2), $dis->iconSent($stars, $feature), $dis->embedColor(2), $dis->modBadge($accountID), $dis->footerText($accountID)." | Level ID: $levelID", $levelID, $stars));
+					$dis->discordNotifyNew(1, $levelID, 1, 3, 2, 2, $accountID, 3, $feature, $stars);
 					echo 1;
 				}
 			}

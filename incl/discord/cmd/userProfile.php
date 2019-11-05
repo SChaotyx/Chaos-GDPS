@@ -33,6 +33,7 @@ if($query->rowCount() == 0){
 	$dis->discordNotify($channelID, $data_string);
 	exit ("profile Command: nothing found");
 }
-$dis->discordNotify($channelID, $dis->accEmbedContent(2, $dis->title(22), $dis->iconProfile($targetAccID), $dis->embedColor(7), "misc/auto.png", "Chaos-Bot", $targetAccID, $_POST["tagID"]));
+$dis->discordNotifyNew($channelID, $targetAccID, 2, 2, 22, 7, 1, 0, 0, $_POST["tagID"]);
+//$dis->discordNotify($channelID, $dis->accEmbedContent(2, $dis->title(22), $dis->iconProfile($targetAccID), $dis->embedColor(7), "misc/auto.png", "Chaos-Bot", $targetAccID, $_POST["tagID"]));
 echo "profile Command: $userName's stats found!";
 ?>
