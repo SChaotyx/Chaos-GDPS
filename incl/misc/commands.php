@@ -472,6 +472,30 @@ class Commands {
 				}
 			}
 		}
+		//CONFIRM LINK COMMAND
+		if(substr($command, 0, 8) == '!confirm'){
+			$code = $commentarray[1];
+			$query = $db->prepare("SELECT discordLinkReq, discordID FROM accounts WHERE accountID = :accountID");
+			$query->execute([':accountID' => $accountID]);
+			$result = $query->fetchAll();
+			foreach($result as $userdata){
+				$linkReq = $userdata["discordLinkReq"];
+				$discordID = $userdata["discordID"];
+			}
+			if($linkReq === 1){
+				return false;
+			}
+			if($linkReq === 0){
+				return false;
+			}
+			if($linkReq === $code){
+				$query = $db->prepare("UPDATE accounts SET discordLinkReq = :discordLinkReq WHERE accountID = :accountID");
+				$query->execute([':discordLinkReq' => 1, ':accountID' => $accountID]);
+				$dis->discordDMNotify($discordID, $dis->accEmbedContent(3, $dis->title(27), $dis->iconProfile($accountID), $dis->embedColor(7), $dis->modBadge($accountID), $dis->footerText($accountID), $accountID, 0));
+				return true;
+			}
+			return false;
+		}
 		return false;
 	}
 }

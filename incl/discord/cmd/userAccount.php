@@ -57,9 +57,10 @@ if($query->rowCount() == 0){
 		$usercp = $profile["creatorPoints"];
 		$userorbs = $profile["orbs"];
 		$lastplayed = $profile["lastPlayed"];
-
+		/*
 		$chest1count = $profile["chest1Count"];
 		$chest12count = $profile["chest2Count"];
+		*/
 		$completedLvls = $profile["completedLvls"];
 		$isbanned = $profile["isBanned"];
 		$isCbanned = $profile["isCreatorBanned"];

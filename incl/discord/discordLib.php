@@ -28,59 +28,43 @@ class discordLib {
 		curl_close($crl);
 	return $response;
 	}
-	public function discordDMNotify($type, $ID, $data_string){
+	public function discordDMNotify($discordID, $data_string){
 		include __DIR__ . "/../lib/connection.php";
 		include __DIR__ . "/../../config/discord.php";
 		if($discordEnabled != 1){
 			return false;
 		}
-		//GET AccountID from levelID
-		if($type == 1){
-			$query = $db->prepare("SELECT extID FROM levels WHERE levelID = :levelID");
-			$query->execute([':levelID' => $ID]);
-			if ($query->rowCount() != 1) {
-				return false;
-			}
-			$ID = $query->fetchColumn();			
-		}
-		//LINKED ACCOUNT?
-		$query = $db->prepare("SELECT discordID FROM accounts WHERE accountID = :extID AND discordLinkReq = 0");
-		$query->execute([':extID' => $ID]);
-		if ($query->rowCount() != 1) {
-			return false;
-		}
-			$discordID = $query->fetchColumn();
-			//FIND USER CHANNEL
-			$data = array("recipient_id" => $discordID);                                                                    
-			$data_string2 = json_encode($data);
-			$url = "https://discordapp.com/api/v6/users/@me/channels";
-			$crl = curl_init($url);
-			$headr = array();
-			$headr['User-Agent'] = 'CvoltonGDPS (http://pi.michaelbrabec.cz:9010, 1.0)';
-			curl_setopt($crl, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
-			curl_setopt($crl, CURLOPT_POSTFIELDS, $data_string2);
-			$headr[] = 'Content-type: application/json';
-			$headr[] = 'Authorization: Bot '.$bottoken;
-			curl_setopt($crl, CURLOPT_HTTPHEADER,$headr);
-			curl_setopt($crl, CURLOPT_RETURNTRANSFER, 1); 
-			$response = curl_exec($crl);
-			curl_close($crl);
-			$responseDecode = json_decode($response, true);
-			//SEND MSG		
-			$discordUserID = $responseDecode["id"];
-			$url = "https://discordapp.com/api/v6/channels/".$discordUserID."/messages";
-			$crl = curl_init($url);
-			$headr = array();
-			$headr['User-Agent'] = 'CvoltonGDPS (http://pi.michaelbrabec.cz:9010, 1.0)';
-			curl_setopt($crl, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
-			curl_setopt($crl, CURLOPT_POSTFIELDS, $data_string);
-			$headr[] = 'Content-type: application/json';
-			$headr[] = 'Authorization: Bot '.$bottoken;
-			curl_setopt($crl, CURLOPT_HTTPHEADER,$headr);
-				curl_setopt($crl, CURLOPT_RETURNTRANSFER, 1); 
-			$response = curl_exec($crl);
-			curl_close($crl);
-			return $response;	
+		//FIND USER CHANNEL
+		$data = array("recipient_id" => $discordID);                                                                    
+		$data_string2 = json_encode($data);
+		$url = "https://discordapp.com/api/v6/users/@me/channels";
+		$crl = curl_init($url);
+		$headr = array();
+		$headr['User-Agent'] = 'CvoltonGDPS (http://pi.michaelbrabec.cz:9010, 1.0)';
+		curl_setopt($crl, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+		curl_setopt($crl, CURLOPT_POSTFIELDS, $data_string2);
+		$headr[] = 'Content-type: application/json';
+		$headr[] = 'Authorization: Bot '.$bottoken;
+		curl_setopt($crl, CURLOPT_HTTPHEADER,$headr);
+		curl_setopt($crl, CURLOPT_RETURNTRANSFER, 1); 
+		$response = curl_exec($crl);
+		curl_close($crl);
+		$responseDecode = json_decode($response, true);
+		//SEND MSG		
+		$discordUserID = $responseDecode["id"];
+		$url = "https://discordapp.com/api/v6/channels/".$discordUserID."/messages";
+		$crl = curl_init($url);
+		$headr = array();
+		$headr['User-Agent'] = 'CvoltonGDPS (http://pi.michaelbrabec.cz:9010, 1.0)';
+		curl_setopt($crl, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+		curl_setopt($crl, CURLOPT_POSTFIELDS, $data_string);
+		$headr[] = 'Content-type: application/json';
+		$headr[] = 'Authorization: Bot '.$bottoken;
+		curl_setopt($crl, CURLOPT_HTTPHEADER,$headr);
+		curl_setopt($crl, CURLOPT_RETURNTRANSFER, 1); 
+		$response = curl_exec($crl);
+		curl_close($crl);
+		return $response;	
 	}
 	public function title($id){
 		include __DIR__ . "/../discord/emojis.php";
@@ -136,6 +120,8 @@ class discordLib {
 		case 25: $title = "$icon_profile Server Stats";
 			break;
 		case 26: $title = "$icon_brokenmodstar Rank degraded...";
+			break;
+		case 27: $title = "$icon_succes Your account has been linked!!!";
 		    break;
 		}
 	return $title;
@@ -547,6 +533,7 @@ class discordLib {
 		$leaderboardinfo = $rank.$globalrank.$globalcreators.$bar;
 		$userinfo = " | UserID: $userID | AccID: $targetAccID";
 		$tag = "<@$stars>, here is the profile of user **$targetUser**:";
+		$msg = "Felicidades tu cuenta ya esta enlazada!!!!";
 		$mainIcon = $this->iconGenerator($icontype, $icon, $color1, $color2, $glow, 0);
 		$iconSet = $this->iconSetProfile($icontype, $icon, $color1, $color2, $glow, $accIcon, $accShip, $accBall, $accBird, $accDart, $accRobot, $accSpider);
 		//BUILD JSON
@@ -567,6 +554,20 @@ class discordLib {
 			//FROM BOT TAG
 			case 2: $data = array(
 				"content"=> $tag,
+				'embed'=> [
+					"title"=> $title,
+				    "fields"=> [
+						["name"=> $usertitle, "value"=> $userstats],
+						["name"=> $bar, "value"=> $leaderboardinfo]],					
+					"color"=> $color,
+					"footer"=> ["icon_url"=> ($iconhost.$footicon), "text"=> ($foottext.$userinfo)],
+					"thumbnail"=> ["url"=> ($iconhost.$mainIcon)],
+					"image"=> ["url"=> ($iconhost.$iconSet)],
+				]);
+			break;
+			//MD
+			case 3: $data = array(
+				"content"=> $msg,
 				'embed'=> [
 					"title"=> $title,
 				    "fields"=> [
