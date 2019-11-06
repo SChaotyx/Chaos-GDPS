@@ -31,7 +31,6 @@ if($query->rowCount() == 0){
 }
 $levelID = $query->fetchColumn();
 $tag = "<@".$_POST['tagID'].">, here is the current Daily/Weekly level.";
-$dis->discordNotifyNew($channelID, $levelID, 1, 2, $titleday, 7, 1, 1, 0, $tag);
-//$dis->discordNotify($channelID, $dis->embedContent(2, $dis->title($titleday), $dis->diffthumbnail($levelID), $dis->embedColor(7), "misc/auto.png", "Chaos-Bot", $levelID, $tag));
+$dis->discordNotifyNew($channelID, $levelID, 1, 7, $titleday, 7, 1, 1, 0, $tag);
 echo "Daily/Weekly Command: daily/weekly Level found!";
 ?>

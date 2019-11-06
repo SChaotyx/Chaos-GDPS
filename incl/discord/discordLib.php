@@ -466,6 +466,19 @@ class discordLib {
 					"thumbnail"=> ["url"=> ($iconhost.$thumbnail)],
 				]);
 			break;
+			//COMPACT WITH USER TAG
+			case 7: $data = array(
+				"content"=> $stars,
+				'embed'=> [
+					"title"=> $title,
+				    "fields"=> [
+						["name"=> $levelbyc, "value"=> $stats],
+						["name"=> $usercoins, "value"=> $songdata]],
+					"color"=> $color,
+					"footer"=> ["icon_url"=> ($iconhost.$footicon), "text"=> ($foottext.$levelInfo)],
+					"thumbnail"=> ["url"=> ($iconhost.$thumbnail)],
+				]);
+			break;
 		}                                                    
 		$data_string = json_encode($data);
 		return $data_string;
