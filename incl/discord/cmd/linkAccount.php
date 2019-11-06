@@ -24,13 +24,13 @@ if($query->rowCount() == 0){
 }
 $accountID = $query->fetchColumn();
 //is already linked?
-$query = $db->prepare("SELECT discordLinkReq, discordTag FROM accounts WHERE accountID = :accountID");
+$query = $db->prepare("SELECT discordLinkReq, discordID FROM accounts WHERE accountID = :accountID");
 $query->execute([':accountID' => $accountID]);
 $userInfo = $query->fetchAll()[0];
 $linkStatus = $userInfo["discordLinkReq"];
-$usertag2 = $userInfo["discordTag"];
+$usertag2 = $userInfo["discordID"];
 if($linkStatus == 1){
-    $nothing = "<@".$_POST['tagID'].">, esta cuenta ya esta enlazada a ".$usertag2;
+    $nothing = "<@".$_POST['tagID'].">, esta cuenta ya esta enlazada a <@".$usertag2.">";
 	$data = array("content"=> $nothing);                                               
 	$data_string = json_encode($data);
 	$dis->discordNotify($channelID, $data_string);
@@ -40,8 +40,8 @@ if($linkStatus == 1){
 $length = 6;
 $code = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
 //update db
-$query = $db->prepare("UPDATE accounts SET discordID=:discordID, discordLinkReq=:code, discordTag=:discordTag WHERE accountID=:accountID"); 
-$query->execute([':discordID' => $tagID, ':code' => $code, ':discordTag' => $userTag, ':accountID' => $accountID]);
+$query = $db->prepare("UPDATE accounts SET discordID=:discordID, discordLinkReq=:code WHERE accountID=:accountID"); 
+$query->execute([':discordID' => $tagID, ':code' => $code, ':accountID' => $accountID]);
 //send msg
 $nothing = "Bien <@".$_POST['tagID'].">, ahora ve a tu perfil en el gdps y coloca `!confirm ".$code."`(respeta mayúsculas) para confirmar que eres tu.";
 $data = array("content"=> $nothing);                                               

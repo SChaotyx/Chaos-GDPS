@@ -68,7 +68,7 @@ CREATE TABLE `accounts` (
   `friendsCount` int(11) NOT NULL DEFAULT 0,
   `saveKey` blob NOT NULL,
   `discordID` bigint(20) NOT NULL DEFAULT 0,
-  `discordLinkReq` bigint(20) NOT NULL DEFAULT 0
+  `discordLinkReq` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
