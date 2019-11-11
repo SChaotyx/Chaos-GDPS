@@ -1,7 +1,6 @@
 <?php
 chdir(dirname(__FILE__));
 //error_reporting(0);
-include __DIR__ . "/../../config/discord.php";
 include "../lib/connection.php";
 require_once "../lib/GJPCheck.php";
 require_once "../lib/exploitPatch.php";
@@ -133,7 +132,7 @@ $uploadDate = time();
 	} else {
 		$hostname = $_SERVER['REMOTE_ADDR'];
 	}
-$query = $db->prepare("SELECT stars,coins,demons,userCoins,diamonds FROM users WHERE userID=:userID LIMIT 1"); //getting differences
+$query = $db->prepare("SELECT stars,coins,demons,userCoins,diamonds,creatorPoints FROM users WHERE userID=:userID LIMIT 1"); //getting differences
 $query->execute([':userID' => $userID]);
 $old = $query->fetch();
 $starsdiff = $stars - $old["stars"];
@@ -141,23 +140,15 @@ $coindiff = $coins - $old["coins"];
 $demondiff = $demons - $old["demons"];
 $ucdiff = $userCoins - $old["userCoins"];
 $diadiff = $diamonds - $old["diamonds"];
+$creatorPoints = $old["creatorPoints"];
 $query2 = $db->prepare("INSERT INTO actions (type, value, timestamp, account, value2, value3, value4, value5) 
 									 VALUES ('9',:stars,:timestamp,:account,:coinsd, :demon, :usrco, :diamond)"); //creating the action
 $query = $db->prepare("UPDATE users SET gameVersion=:gameVersion, userName=:userName, coins=:coins,  secret=:secret, stars=:stars, demons=:demons, icon=:icon, color1=:color1, color2=:color2, iconType=:iconType, userCoins=:userCoins, special=:special, accIcon=:accIcon, accShip=:accShip, accBall=:accBall, accBird=:accBird, accDart=:accDart, accRobot=:accRobot, accGlow=:accGlow, IP=:hostname, lastPlayed=:uploadDate, accSpider=:accSpider, accExplosion=:accExplosion, diamonds=:diamonds WHERE userID=:userID");
 $query->execute([':gameVersion' => $gameVersion, ':userName' => $userName, ':coins' => $coins, ':secret' => $secret, ':stars' => $stars, ':demons' => $demons, ':icon' => $icon, ':color1' => $color1, ':color2' => $color2, ':iconType' => $iconType, ':userCoins' => $userCoins, ':special' => $special, ':accIcon' => $accIcon, ':accShip' => $accShip, ':accBall' => $accBall, ':accBird' => $accBird, ':accDart' => $accDart, ':accRobot' => $accRobot, ':accGlow' => $accGlow, ':hostname' => $hostname, ':uploadDate' => $uploadDate, ':userID' => $userID, ':accSpider'=>$accSpider, ':accExplosion'=>$accExplosion, ':diamonds'=>$diamonds]);
 $query2->execute([':timestamp' => time(), ':stars' => $starsdiff, ':account' => $userID, ':coinsd' => $coindiff, ':demon' => $demondiff, ':usrco' => $ucdiff, ':diamond' => $diadiff]);
 if(is_numeric($_POST["accountID"])){
-	$dis->discordNotifyNew(2, $_POST["accountID"], 2, 1, 18, 7, 1, 0, 0, 0);	
-}
-if($discordEnabled != 1){
-	$query = $db->prepare("SELECT discordID,discordLinkReq FROM accounts WHERE accountID=:accountID"); //getting differences
-	$query->execute([':accountID' => $_POST["accountID"]]);
-	$discord = $query->fetch();
-	$discordID = $discord["discordID"];
-	$discordLinkReq = $discord["discordLinkReq"];
-	if($discordLinkReq == 1){
-		$dis->autocmd($discordID, $memberRole);
-	}
+	$dis->discordNotifyNew(2, $_POST["accountID"], 2, 1, 18, 7, 1, 0, 0, 0);
+	$dis->roleAssign($_POST["accountID"], 1, $stars, $creatorPoints);
 }
 echo $userID;
 ?>

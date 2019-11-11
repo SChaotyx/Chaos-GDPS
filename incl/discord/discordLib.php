@@ -10,7 +10,7 @@ class discordLib {
 			break;
 			case 2: $channelID = $channel2;
 			break;
-			case 2: $channelID = $channel3;
+			case 3: $channelID = $channel3;
 			break;
 			default: $channelID = $id;
 			break;
@@ -1191,11 +1191,43 @@ class discordLib {
 		imagepng($base, $filename);
 		return $imgurl;
 	}
-	public function autocmd($discordID, $roleID){
-		$cmd = $prefix."setrole ".$discordID." ".$roleID;
+	public function roleAssign($objectID, $objectType, $value, $value2){
+		include __DIR__ . "/../lib/connection.php";
+		include __DIR__ . "/../../config/discord.php";
+		if($discordEnabled != 1){
+			return false;
+		}
+		if($objectType == 2){ //get accountID from userID
+			$query = $db->prepare("SELECT extID FROM users WHERE userID = :id");
+			$query->execute([':id' => $objectID]);
+			$objectID = $query->fetchColumn();
+		}
+		//get discordID & discordLinkReq
+		$query = $db->prepare("SELECT discordID,discordLinkReq FROM accounts WHERE accountID=:accountID"); //getting differences
+		$query->execute([':accountID' => $objectID]);
+		$discord = $query->fetch();
+		$discordID = $discord["discordID"];
+		$discordLinkReq = $discord["discordLinkReq"];
+		if($discordLinkReq != 1){
+			return false;
+		}
+		//member role
+		$cmd = $prefix."setrole ".$discordID." ".$memberRole;
 		$data = array("content"=> $cmd);  
 		$data_string = json_encode($data);
 		$this->discordNotify(3, $data_string);
+		if($value > 499){ // +500 stars role
+			$cmd = $prefix."setrole ".$discordID." ".$starsRole;
+			$data = array("content"=> $cmd);  
+			$data_string = json_encode($data);
+			$this->discordNotify(3, $data_string);
+		}
+		if($value2 > 5 AND $value > 749 ){ // +5 rated levels role & 750 stars
+			$cmd = $prefix."setrole ".$discordID." ".$ratedLevelsRole;
+			$data = array("content"=> $cmd);  
+			$data_string = json_encode($data);
+			$this->discordNotify(3, $data_string);
+		}
 	}
 }
 ?>

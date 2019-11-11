@@ -8,4 +8,6 @@ $channel2 = ""; //public actions channel id
 $channel3 = ""; //bot actions channel id
 $prefix = ""; //bot prefix
 $memberRole = ""; //gdps member role id
+$starsRole = ""; //stars role
+$ratedLevelsRole = ""; //rated levels role
 ?>
