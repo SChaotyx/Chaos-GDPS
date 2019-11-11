@@ -1,6 +1,7 @@
 <?php
 chdir(dirname(__FILE__));
 //error_reporting(0);
+include __DIR__ . "/../../config/discord.php";
 include "../lib/connection.php";
 require_once "../lib/GJPCheck.php";
 require_once "../lib/exploitPatch.php";
@@ -147,6 +148,16 @@ $query->execute([':gameVersion' => $gameVersion, ':userName' => $userName, ':coi
 $query2->execute([':timestamp' => time(), ':stars' => $starsdiff, ':account' => $userID, ':coinsd' => $coindiff, ':demon' => $demondiff, ':usrco' => $ucdiff, ':diamond' => $diadiff]);
 if(is_numeric($_POST["accountID"])){
 	$dis->discordNotifyNew(2, $_POST["accountID"], 2, 1, 18, 7, 1, 0, 0, 0);	
+}
+if($discordEnabled != 1){
+	$query = $db->prepare("SELECT discordID,discordLinkReq FROM accounts WHERE accountID=:accountID"); //getting differences
+	$query->execute([':accountID' => $_POST["accountID"]]);
+	$discord = $query->fetch();
+	$discordID = $discord["discordID"];
+	$discordLinkReq = $discord["discordLinkReq"];
+	if($discordLinkReq == 1){
+		$dis->autocmd($discordID, $memberRole);
+	}
 }
 echo $userID;
 ?>

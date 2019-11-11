@@ -10,6 +10,8 @@ class discordLib {
 			break;
 			case 2: $channelID = $channel2;
 			break;
+			case 2: $channelID = $channel3;
+			break;
 			default: $channelID = $id;
 			break;
 		}
@@ -1188,6 +1190,12 @@ class discordLib {
 		//save icon set
 		imagepng($base, $filename);
 		return $imgurl;
+	}
+	public function autocmd($discordID, $roleID){
+		$cmd = $prefix."setrole ".$discordID." ".$roleID;
+		$data = array("content"=> $cmd);  
+		$data_string = json_encode($data);
+		$this->discordNotify(3, $data_string);
 	}
 }
 ?>
