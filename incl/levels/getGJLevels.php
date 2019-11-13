@@ -177,7 +177,12 @@ if($type==0 OR $type==15){ //most liked, changed to 15 in GDW for whatever reaso
 	$order = "likes";
 	if($str!=""){
 		if(is_numeric($str)){
-			$params = array("levelID = '$str'");
+			$extID = $gs->getValue('extID', 'levels', 'levelID', $str);
+			if($extID == 0){
+				$params[] = "levelID = '$str'";
+			}else{
+				$params = array("levelID = '$str'");
+			}
 		}else{
 			$params[] = "levelName LIKE '%$str%'";
 		}
@@ -215,7 +220,8 @@ if($type==7){ //MAGIC
 	$params[] = "objects > 4999";
 }
 if($type==10){ //MAP PACKS
-	$order = false;
+	$params = array();
+	$order = "starStars ,uploadDate";
 	$params[] = "levelID IN ($str)";
 }
 if($type==11){ //AWARDED
