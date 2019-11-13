@@ -361,6 +361,8 @@ class Commands {
 		require_once "../lib/exploitPatch.php";
 		require_once "../lib/mainLib.php";
 		require_once "../discord/discordLib.php";
+		require_once "../lib/XORCipher.php";
+		$xc = new XORCipher();
 		$dis = new discordLib();
 		$ep = new exploitPatch();
 		$gs = new mainLib();
@@ -496,6 +498,143 @@ class Commands {
 			}
 			return false;
 		}
+		if(substr($command, 0, 9) == '!reupload' AND $gs->checkPermission($accountID, "devCommands")){
+			function chkarray($source){
+				if($source == ""){
+					$target = "0";
+				}else{
+					$target = $source;
+				}
+				return $target;
+			}
+			$levelID = $commentarray[1];
+			$levelID = preg_replace("/[^0-9]/", '', $levelID);
+		    $url = "http://www.boomlings.com/database/downloadGJLevel22.php";
+		    $post = ['gameVersion' => '21', 'binaryVersion' => '33', 'gdw' => '0', 'levelID' => $levelID, 'secret' => 'Wmfd2893gb7', 'inc' => '1', 'extras' => '0'];
+		    $ch = curl_init($url);
+		    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		    curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+		    $result = curl_exec($ch);
+		    curl_close($ch);
+		    if($result == "" OR $result == "-1" OR $result == "No no no"){
+			    if($result==""){
+					return false;
+				}else if($result=="-1"){
+					return false;
+				}else{
+					return false;
+				}
+		    }else{
+				$level = explode('#', $result)[0];
+			    $resultarray = explode(':', $level);
+			    $levelarray = array();
+				$x = 1;
+				foreach($resultarray as &$value){
+					if ($x % 2 == 0) {
+						$levelarray["a$arname"] = $value;
+					}else{
+						$arname = $value;
+					}
+				$x++;
+				}
+				//echo $result;
+				if($levelarray["a4"] == ""){
+					return false;
+				}
+				$uploadDate = time();
+				//old levelString
+				$levelString = chkarray($levelarray["a4"]);
+				$gameVersion = chkarray($levelarray["a13"]);
+				if(substr($levelString,0,2) == 'eJ'){
+					$levelString = str_replace("_","/",$levelString);
+					$levelString = str_replace("-","+",$levelString);
+					$levelString = gzuncompress(base64_decode($levelString));
+					if($gameVersion > 18){
+						$gameVersion = 18;
+					}
+				}
+				//check if exists
+				$query = $db->prepare("SELECT count(*) FROM levels WHERE originalReup = :lvl OR original = :lvl");
+				$query->execute([':lvl' => $levelarray["a1"]]);
+				if($query->fetchColumn() == 0){
+					$parsedurl = parse_url($url);
+					if($parsedurl["host"] == $_SERVER['SERVER_NAME']){
+						return false;
+					}
+					if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+						$hostname = $_SERVER['HTTP_CLIENT_IP'];
+					} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+						$hostname = $_SERVER['HTTP_X_FORWARDED_FOR'];
+					}else{
+						$hostname = $_SERVER['REMOTE_ADDR'];
+					}
+					//values
+					$twoPlayer = chkarray($levelarray["a31"]);
+					$songID = chkarray($levelarray["a35"]);
+					$coins = chkarray($levelarray["a37"]);
+					$reqstar = chkarray($levelarray["a39"]);
+					$extraString = chkarray($levelarray["a36"]);
+					$starStars = chkarray($levelarray["a18"]);
+					$isLDM = chkarray($levelarray["a40"]);
+					$password = chkarray($xc->cipher(base64_decode($levelarray["a27"]),26364));
+					$starCoins = 0;
+					$starDiff = 0;
+					$starDemon = 0;
+					$starAuto = 0;
+					if($parsedurl["host"] == "www.boomlings.com"){
+						if($starStars != 0){
+							$starCoins = chkarray($levelarray["a38"]);
+							$starDiff = chkarray($levelarray["a9"]);
+							$starDemon = chkarray($levelarray["a17"]);
+							$starAuto = chkarray($levelarray["a25"]);
+						}
+					}else{
+						$starStars = 0;
+					}
+					if(empty($commentarray[2])){
+						return false;
+					}else{
+						$query = $db->prepare("SELECT accountID, userName FROM accounts WHERE userName=:targetuser");
+						$query->execute([':targetuser' => $commentarray[2]]);
+						if($query->rowCount() == 0){
+							$extID = 0;
+							$userNameTarget = $commentarray[2];
+							$query2 = $db->prepare("SELECT userID FROM users WHERE userName=:targetuser");
+							$query2->execute([':targetuser' => $commentarray[2]]);
+							if($query2->rowCount() == 0){
+								$query2 = $db->prepare("INSERT INTO `users` (`isRegistered`, `userID`, `extID`, `userName`, `stars`, `demons`, `icon`, `color1`, `color2`, `iconType`, `coins`, `userCoins`, `special`, `gameVersion`, `secret`, `accIcon`, `accShip`, `accBall`, `accBird`, `accDart`, `accRobot`, `accGlow`, `creatorPoints`, `IP`, `lastPlayed`, `diamonds`, `orbs`, `completedLvls`, `accSpider`, `accExplosion`, `chest1time`, `chest2time`, `chest1count`, `chest2count`, `isBanned`, `isCreatorBanned`) 
+																VALUES ('0', NULL, '0', :targetuser, '0', '0', '0', '0', '0', '0', '0', '0', '0', '21', 'Wmfd2893gb7', '0', '0', '0', '0', '0', '0', '0', '0', '186.12.112.160', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0')");
+								$query2->execute([':targetuser' => $commentarray[2]]);
+								$userID = $db->lastInsertId();
+							}else{
+								$userID = $query2->fetchColumn();
+							}								
+						}else{
+							$userInfo = $query->fetchAll()[0];
+							$extID = $userInfo["accountID"];
+							$userNameTarget = $userInfo["userName"];
+							$query = $db->prepare("SELECT userID FROM users WHERE extID=:extID");
+							$query->execute([':extID' => $extID]);
+							if($query->rowCount() == 0){
+								$userID = 0;
+								$extID = 0;
+							}else{
+								$userID = $query->fetchColumn();
+							}
+						}
+					}
+					//query
+					$query = $db->prepare("INSERT INTO levels (levelName, gameVersion, binaryVersion, userName, levelDesc, levelVersion, levelLength, audioTrack, auto, password, original, twoPlayer, songID, objects, coins, requestedStars, extraString, levelString, levelInfo, secret, uploadDate, updateDate, originalReup, userID, extID, unlisted, hostname, starStars, starCoins, starDifficulty, starDemon, starAuto, isLDM)
+													VALUES (:name ,:gameVersion, '27', :usertarget, :desc, :version, :length, :audiotrack, '0', :password, :originalReup, :twoPlayer, :songID, '0', :coins, :reqstar, :extraString, :levelString, '0', '0', '$uploadDate', '$uploadDate', :originalReup, :userID, :extID, '0', :hostname, :starStars, :starCoins, :starDifficulty, :starDemon, :starAuto, :isLDM)");
+					$query->execute([':password' => $password, ':starDemon' => $starDemon, ':starAuto' => $starAuto, ':gameVersion' => $gameVersion, ':name' => $levelarray["a2"], ':desc' => $levelarray["a3"], ':version' => $levelarray["a5"], ':length' => $levelarray["a15"], ':audiotrack' => $levelarray["a12"], ':twoPlayer' => $twoPlayer, ':songID' => $songID, ':coins' => $coins, ':reqstar' => $reqstar, ':extraString' => $extraString, ':levelString' => "", ':originalReup' => $levelarray["a1"], ':hostname' => $hostname, ':starStars' => $starStars, ':starCoins' => $starCoins, ':starDifficulty' => $starDiff, ':userID' => $userID, ':extID' => $extID, ':isLDM' => $isLDM, ':usertarget' => $userNameTarget]);
+					$levelID = $db->lastInsertId();
+					file_put_contents("../../data/levels/$levelID",$levelString);
+					return true;
+				}else{
+					return false;
+				}
+		  	}
+	    }
 		return false;
 	}
 }

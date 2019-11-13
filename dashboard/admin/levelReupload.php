@@ -130,12 +130,23 @@ if(!empty($_POST["userName"] and $_POST["password"] and $_POST["levelid"])){
 				if(empty($_POST["targetuser"])){
 					$userID = 0;
 					$extID = 0;
+					$userNameTarget = "reupload";
 				}else{
 					$query = $db->prepare("SELECT accountID, userName FROM accounts WHERE userName=:targetuser OR accountID=:targetuser");
 					$query->execute([':targetuser' => $_POST["targetuser"]]);
 					if($query->rowCount() == 0){
-						$userID = 0;
 						$extID = 0;
+						$userNameTarget = $_POST["targetuser"];
+						$query2 = $db->prepare("SELECT userID FROM users WHERE userName=:targetuser");
+						$query2->execute([':targetuser' => $_POST["targetuser"]]);
+						if($query2->rowCount() == 0){
+							$query2 = $db->prepare("INSERT INTO `users` (`isRegistered`, `userID`, `extID`, `userName`, `stars`, `demons`, `icon`, `color1`, `color2`, `iconType`, `coins`, `userCoins`, `special`, `gameVersion`, `secret`, `accIcon`, `accShip`, `accBall`, `accBird`, `accDart`, `accRobot`, `accGlow`, `creatorPoints`, `IP`, `lastPlayed`, `diamonds`, `orbs`, `completedLvls`, `accSpider`, `accExplosion`, `chest1time`, `chest2time`, `chest1count`, `chest2count`, `isBanned`, `isCreatorBanned`) 
+															VALUES ('0', NULL, '0', :targetuser, '0', '0', '0', '0', '0', '0', '0', '0', '0', '21', 'Wmfd2893gb7', '0', '0', '0', '0', '0', '0', '0', '0', '186.12.112.160', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0')");
+							$query2->execute([':targetuser' => $_POST["targetuser"]]);
+							$userID = $db->lastInsertId();
+						}else{
+							$userID = $query2->fetchColumn();
+						}	
 					}else{
 						$userInfo = $query->fetchAll()[0];
 						$extID = $userInfo["accountID"];
