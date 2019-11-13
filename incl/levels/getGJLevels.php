@@ -271,12 +271,7 @@ foreach($result as &$level1) {
 				$songsstring .= $gs->getSongString($level1["songID"]) . "~:~";
 			}
 		}
-		//detect userName exist on users
-		$userData = $gs->getUserString($level1["userID"]);
-		if($userData == false){
-			$userData = $level1["userID"] . ":" . $level1["userName"] . ":" . $level1["extID"];
-		}
-		$userstring .= $userData."|";
+		$userstring .= $gs->getUserString($level1["userID"])."|";
 	}
 }
 $lvlstring = substr($lvlstring, 0, -1);

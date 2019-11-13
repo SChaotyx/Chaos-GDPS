@@ -390,9 +390,6 @@ class mainLib {
 		$query = $db->prepare("SELECT userName, extID FROM users WHERE userID = :id");
 		$query->execute([':id' => $userID]);
 		$userdata = $query->fetch();
-		if($userdata["userName"] == "NONAME"){
-			return false;
-		}
 		if(is_numeric($userdata["extID"])){
 			$extID = $userdata["extID"];
 		}else{
