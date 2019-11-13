@@ -390,6 +390,9 @@ class mainLib {
 		$query = $db->prepare("SELECT userName, extID FROM users WHERE userID = :id");
 		$query->execute([':id' => $userID]);
 		$userdata = $query->fetch();
+		if($userdata["userName"] == "NONAME"){
+			return false;
+		}
 		if(is_numeric($userdata["extID"])){
 			$extID = $userdata["extID"];
 		}else{
@@ -877,7 +880,7 @@ class mainLib {
         }
     }
 }
-	//UPDATE CP V1.2 (gauntlet cp's count | length medium starred levels 1 cp)
+	//UPDATE CP V1.2 (gauntlet cp's count | medium starred levels 1 cp)
   public function updatecp($levelID){
 	include __DIR__ . "/connection.php";
 	//getting userID
