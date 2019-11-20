@@ -2,6 +2,7 @@
 chdir(dirname(__FILE__));
 //error_reporting(0);
 include "../../lib/connection.php";
+include "../../../config/discord.php";
 require_once "../../lib/GJPCheck.php";
 require_once "../../lib/exploitPatch.php";
 $ep = new exploitPatch();
@@ -9,11 +10,25 @@ require_once "../../lib/mainLib.php";
 $gs = new mainLib();
 require_once "../discordLib.php";
 $dis = new discordLib();
-if(empty($_POST["userName"])){
-	exit ("The server did not receive data");
-}
 $userName = $_POST['userName'];
 $channelID = $_POST['channel'];
+if(empty($_POST["userName"])){
+	$query = $db->prepare("SELECT discordLinkReq, accountID FROM accounts WHERE discordID = :discordID");
+	$query->execute([':discordID' => $_POST['tagID']]);
+	$userInfo = $query->fetchAll()[0];
+	$linkStatus = $userInfo["discordLinkReq"];
+	$targetAccID = $userInfo["accountID"];
+	if($linkStatus == 1){
+		$dis->discordNotifyNew($channelID, $targetAccID, 2, 2, 22, 7, 1, 0, 0, $_POST["tagID"]);
+		exit;
+	}else{
+		$nothing = "<@".$_POST['tagID'].">, use `".$prefix."profile <usarName or userID>`";
+		$data = array("content"=> $nothing);                                               
+		$data_string = json_encode($data);
+		$dis->discordNotify($channelID, $data_string);
+		exit ("profile Command: nothing found");
+	}
+}
 $query = $db->prepare("SELECT extID FROM users WHERE userName = :userName OR userID = :userName LIMIT 1");
 $query->execute([':userName' => $userName]);
 if($query->rowCount() == 0){
