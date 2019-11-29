@@ -18,7 +18,7 @@ if(empty($_POST["type"])){
 $type = $_POST["type"];
 $tag = $_POST["tagID"];
 
-$query = $db->prepare("SELECT * FROM users WHERE $type AND isBanned = 0 ORDER BY $type DESC LIMIT 10");
+$query = $db->prepare("SELECT * FROM users WHERE $type AND isBanned = 0 AND isCreatorBanned = 0 ORDER BY $type DESC LIMIT 10");
 $query->execute([':userName' => $userName]);
 if($query->rowCount() == 0){
 	$nothing = "<@".$_POST['tagID'].">, Nothing Found";
