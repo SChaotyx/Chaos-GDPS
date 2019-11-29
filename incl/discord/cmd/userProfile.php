@@ -13,14 +13,15 @@ $dis = new discordLib();
 $userName = $_POST['userName'];
 $channelID = $_POST['channel'];
 if(empty($_POST["userName"])){
-	$query = $db->prepare("SELECT discordLinkReq, accountID FROM accounts WHERE discordID = :discordID");
+	$query = $db->prepare("SELECT userName, discordLinkReq, accountID FROM accounts WHERE discordID = :discordID");
 	$query->execute([':discordID' => $_POST['tagID']]);
 	$userInfo = $query->fetchAll()[0];
 	$linkStatus = $userInfo["discordLinkReq"];
 	$targetAccID = $userInfo["accountID"];
+	$userName = $userInfo["userName"];
 	if($linkStatus == 1){
 		$dis->discordNotifyNew($channelID, $targetAccID, 2, 2, 22, 7, 1, 0, 0, $_POST["tagID"]);
-		exit;
+		exit ("profile Command: $userName's stats found!");
 	}else{
 		$nothing = "<@".$_POST['tagID'].">, use `".$prefix."profile <usarName or userID>`";
 		$data = array("content"=> $nothing);                                               
