@@ -25,7 +25,7 @@ $account = $query->fetch();
 $newtime = time() - 3600;
 $query6 = $db->prepare("SELECT count(*) FROM actions WHERE type = '1' AND timestamp > :time AND value2 = :ip");
 $query6->execute([':time' => $newtime, ':ip' => $ip]);
-if($query6->fetchColumn() > 5){
+if($query6->fetchColumn() > 10){
 	exit("-12");
 }
 //authenticating

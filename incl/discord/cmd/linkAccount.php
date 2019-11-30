@@ -43,7 +43,7 @@ $code = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP
 $query = $db->prepare("UPDATE accounts SET discordID=:discordID, discordLinkReq=:code WHERE accountID=:accountID"); 
 $query->execute([':discordID' => $tagID, ':code' => $code, ':accountID' => $accountID]);
 //send msg
-$nothing = "Bien <@".$_POST['tagID'].">, ahora ve a tu perfil en el gdps y coloca `!confirm ".$code."`(respeta mayúsculas) para confirmar que eres tu.";
+$nothing = "Bien <@".$_POST['tagID'].">, ahora ve a tu perfil en el gdps y coloca `!confirm ".$code."` (respeta mayúsculas) para confirmar que eres tu.";
 $data = array("content"=> $nothing);                                               
 $data_string = json_encode($data);
 $dis->discordNotify($channelID, $data_string);

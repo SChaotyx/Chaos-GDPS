@@ -4,7 +4,7 @@ require_once "../discordLib.php";
 require_once "../emojis.php";
 include __DIR__ . "/../../../config/discord.php";
 $dis = new discordLib();
-$stars = 19; //190 total stars from RobTop Levels | +20 max tolerable ban
+$stars = 190; //190 total stars from RobTop Levels | +20 max tolerable ban
 $usercoins = 0;  //+3 user coins tolerable ban
 $secretcoins = 66; //66 total secret coins on levels and the vaults //removed map packs secret coins
 $demons = 3; //3 total demons by RobTop | +2 max tolerable ban

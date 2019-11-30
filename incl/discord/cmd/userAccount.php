@@ -112,7 +112,5 @@ $data = array(
 );
 $data_string = json_encode($data);
 $dis->discordNotify($channelID, $data_string);
-//EMBED PROFILE
-//$dis->discordNotify($channelID, $dis->accEmbedContent(1, $dis->title(22), $dis->thumbnail(13), $dis->embedColor(7), "misc/auto.png", "", $accountID, $_POST["tagID"]));
 echo "Account Command: $userSearch's Info found!";
 ?>

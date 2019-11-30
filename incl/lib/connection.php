@@ -13,18 +13,17 @@ catch(PDOException $e)
     {
     echo "Connection failed: " . $e->getMessage();
     }
-// check banned ips
-		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-			$ip = $_SERVER['HTTP_CLIENT_IP'];
-		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		} else {
-			$ip = $_SERVER['REMOTE_ADDR'];
-		}
-    $query7 = $db->prepare("SELECT count(*) FROM bannedips WHERE ip=:ip");
-	$query7->execute([':ip' => $ip]);
-    if($query7->fetchColumn() < 1){	
-	}else{
-		exit -1;
-	}
+/*
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    $time = time();
+    $your_path = $_SERVER["DOCUMENT_ROOT"] . "/incl/lib/ip/"; 
+    $fileName = "$time | $ip";
+    file_put_contents($your_path . $fileName, $time);
+    */
 ?>

@@ -1028,8 +1028,8 @@ class discordLib {
 			$iglow = $prefix1."_".$icon."_glow_001.png";
 		}
 		//set filename and img url
-		$filename = "../../resources/iconPlayer/[$icontype.$icon][$color1][$color2][$glow].png";
-		$imgurl = "iconPlayer/[$icontype.$icon][$color1][$color2][$glow].png";
+		$filename = "../../resources/iconProfile/[$icontype.$icon][$color1][$color2][$glow].png";
+		$imgurl = "iconProfile/[$icontype.$icon][$color1][$color2][$glow].png";
 		//file exists?
 		if (file_exists($filename)) {
 			if($request == 1){ return $filename; }
@@ -1152,11 +1152,11 @@ class discordLib {
 			$icon7 = $this->iconGenerator($it7, $iv7, $color1, $color2, $glow, 1);
 		}
 		//set filename & url
-		$filename = "../../resources/iconPlayer/iconSet/[$it1.$iv1][$it2.$iv2][$it3.$iv3][$it4.$iv4][$it5.$iv5][$it6.$iv6][$color1][$color2][$glow].png";
-		$imgurl = "iconPlayer/iconSet/[$it1.$iv1][$it2.$iv2][$it3.$iv3][$it4.$iv4][$it5.$iv5][$it6.$iv6][$color1][$color2][$glow].png";
+		$filename = "../../resources/iconProfile/iconSet/[$it1.$iv1][$it2.$iv2][$it3.$iv3][$it4.$iv4][$it5.$iv5][$it6.$iv6][$color1][$color2][$glow].png";
+		$imgurl = "iconProfile/iconSet/[$it1.$iv1][$it2.$iv2][$it3.$iv3][$it4.$iv4][$it5.$iv5][$it6.$iv6][$color1][$color2][$glow].png";
 		if($icontype == 100){
-			$filename = "../../resources/iconPlayer/iconSet/[$it1.$iv1][$it2.$iv2][$it3.$iv3][$it4.$iv4][$it5.$iv5][$it6.$iv6][$it7.$iv7][$color1][$color2][$glow].png";
-			$imgurl = "iconPlayer/iconSet/[$it1.$iv1][$it2.$iv2][$it3.$iv3][$it4.$iv4][$it5.$iv5][$it6.$iv6][$it7.$iv7][$color1][$color2][$glow].png";
+			$filename = "../../resources/iconProfile/iconSet/[$it1.$iv1][$it2.$iv2][$it3.$iv3][$it4.$iv4][$it5.$iv5][$it6.$iv6][$it7.$iv7][$color1][$color2][$glow].png";
+			$imgurl = "iconProfile/iconSet/[$it1.$iv1][$it2.$iv2][$it3.$iv3][$it4.$iv4][$it5.$iv5][$it6.$iv6][$it7.$iv7][$color1][$color2][$glow].png";
 		}		
 		//file exists?
 		if (file_exists($filename)) {
