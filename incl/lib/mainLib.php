@@ -886,23 +886,28 @@ class mainLib {
 	if ($query->rowCount() > 0) {
 	$userID = $query->fetchColumn();
 	//getting starred lvls count
-	$query2 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starStars != 0 AND levelLength > 2");
+	$query2 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starStars != 0 AND levelLength > 2 AND original != 1");
 	$query2->execute([':userID' => $userID]);
 	$creatorpoints = $query2->fetchColumn();
 	//getting featured lvls count
-	$query3 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starFeatured != 0 AND levelLength > 2");
+	$query3 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starFeatured != 0 AND levelLength > 2 AND original != 1");
 	$query3->execute([':userID' => $userID]);
 	$cpgain = $query3->fetchColumn();
 	$creatorpoints = $creatorpoints + $cpgain;
 	//getting epic lvls count
-	$query3 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starEpic != 0 AND levelLength > 2");
+	$query3 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starEpic != 0 AND levelLength > 2 AND original != 1");
 	$query3->execute([':userID' => $userID]);
 	$cpgain = $query3->fetchColumn();
 	$creatorpoints = $creatorpoints + $cpgain;
 	//getting starred medium lvls count
-	$query4 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starStars != 0 AND levelLength = 2");
+	$query4 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starStars != 0 AND levelLength = 2 AND original != 1");
 	$query4->execute([':userID' => $userID]);
 	$cpgain = $query4->fetchColumn();
+	$creatorpoints = $creatorpoints + $cpgain;
+	//getting starred reuploaded lvls count
+	$query5 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starStars != 0 AND original = 1");
+	$query5->execute([':userID' => $userID]);
+	$cpgain = $query5->fetchColumn();
 	$creatorpoints = $creatorpoints + $cpgain;
 	//getting gauntlet levels count
 	$query6 = $db->prepare("SELECT level1, level2, level3, level4, level5 FROM gauntlets");
