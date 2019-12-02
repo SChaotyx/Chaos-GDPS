@@ -361,12 +361,15 @@ class discordLib {
 			$copylevelc = "$icon_copy";
 			}
 		}
+		$downloads = $this->charCount($downloads);
+		$likes = $this->charCount($likes);
+		$Length = $this->charCount($Length);
 		//LEVEL DATA
 		$levelby = "$icon_play __".$levelName."__ by $userName";
 		$description = "**Description:** $desc";
 		$usercoins = "Coins: $coinscount";
 		$stats = 
-		    "$icon_download2 `‌$downloads` | $likeicon `$likes` | $icon_length `$Length`\n".
+		    "$icon_download2 `‌$downloads` \n $likeicon `$likes` \n $icon_length `$Length`\n".
 		    "───────────────────";
 		$songdata = ":musical_note: $songdesc";
 		$extrainfo = 
@@ -383,7 +386,7 @@ class discordLib {
 		    "LevelID: $levelID";
 		$sentstars = "Sent Stars: $stars $icon_star";
 		$bar = "───────────────────";
-		$statsc = "$icon_download2 `‌$downloads` | $likeicon `$likes` | $icon_length `$Length`";
+		$statsc = "$icon_download2 `‌$downloads` \n $likeicon `$likes` \n $icon_length `$Length`";
 		$dailyinqueque = "New Daily/weekly level queued!";
 		$isout = "$icon_length __Is out:__ $stars";
 		$oldacc = "Old Account: **$userName**";
@@ -489,20 +492,25 @@ class discordLib {
 		include __DIR__ . "/../lib/connection.php";
 		include __DIR__ . "/../../config/discord.php";
 		include __DIR__ . "/../discord/emojis.php";
-		/*
-		//DETECT TARGET USER
-		$query = $db->prepare("SELECT userName FROM accounts WHERE accountID = :id");
+		// YOUTUBE URL, TWITTER, TWITCH AND DICORD TAG
+		$query = $db->prepare("SELECT youtubeurl, twitter, twitch, discordID, discordLinkReq FROM accounts WHERE accountID = :id");
 		$query->execute([':id' => $targetAccID]);
-		if ($query->rowCount() > 0) {
-			$targetUser = $query->fetchColumn();
-			}else{
-				$targetUser = false;
-			}
-		*/
+		$result = $query->fetchAll();
+		foreach($result as &$userlinks){
+			$yturl = $userlinks["youtubeurl"];
+			$twitter = $userlinks["twitter"];
+			$twitch = $userlinks["twitch"];
+			$discordID = $userlinks["discordID"];
+			$discordLinkReq = $userlinks["discordLinkReq"];
+		}
+		if(empty($yturl)){ $yturl = ""; }else{ $yturl = "$icon_youtube [**YouTube**](https://www.youtube.com/channel/".$yturl.")\n"; }
+		if(empty($twitter)){ $twitter = ""; }else{ $twitter = "$icon_twitter [**Twitter**](https://www.twitter.com/".$twitter.")\n"; }
+		if(empty($twitch)){ $twitch = ""; }else{ $twitch = "$icon_twitch [**Twitch**](https://www.twitch.tv/".$twitch.")\n"; }
+		if($discordLinkReq == 1){ $discord = "$icon_discord **<@$discordID>**\n"; }
 		//READ TARGET USER STATS
 		$query = $db->prepare("SELECT * FROM users WHERE extID = :extID");
 		$query->execute([':extID' => $targetAccID]);
-		//NOT USER PROFILE... (FOR "gdps!account" COMMAND)
+		//NOT USER PROFILE... (FOR "bot!account" COMMAND)
 		if($query->rowCount() == 0){
 			$nothing = "This account exists but does not have a profile.";
 			$data = array("content"=> $nothing);                                               
@@ -549,9 +557,9 @@ class discordLib {
 			break;
 			case 2: $rank = "$icon_mod **MODERATOR**\n";
 			break;
-			case 3: $rank = "$icon_elder **ELDER MODERATOR**\n";
+			case 3: $rank = "$icon_elder **ELDER MOD**\n";
 			break;
-			case 4: $rank = "$icon_head **HEAD MODERATOR**\n";
+			case 4: $rank = "$icon_head **HEAD MOD**\n";
 			break;
 			case 5: $rank = "$icon_admin **ADMIN**\n";
 			break;
@@ -618,11 +626,18 @@ class discordLib {
 		}else{
 			$globalcreators = "";
 		}
+		//userstats char count
+		$userstars = $this->charCount($userstars);
+		$userdiamonds = $this->charCount($userdiamonds);
+		$userscoins = $this->charCount($userscoins);
+		$userucoins = $this->charCount($userucoins);
+		$userdemons = $this->charCount($userdemons);
+		$usercp = $this->charCount($usercp);
 		//GET STRINGS
-		$usertitle = ":chart_with_upwards_trend: $targetUser's stats";
-		$userstats = "$icon_star `$userstars` | $icon_diamond `$userdiamonds` | $icon_secretcoin `$userscoins` | $icon_verifycoins `$userucoins` | $icon_demon `$userdemons` | $icon_cp `$usercp`";
+		$usertitle = "**:chart_with_upwards_trend: $targetUser's stats**";
+		$userstats = "$icon_star `$userstars` \n $icon_diamond `$userdiamonds` \n $icon_secretcoin `$userscoins` \n $icon_verifycoins `$userucoins` \n $icon_demon `$userdemons` \n $icon_cp `$usercp`";
 		$bar = "───────────────────";
-		$leaderboardinfo = $rank.$globalrank.$globalcreators.$bar;
+		$leaderboardinfo = $rank.$globalrank.$globalcreators.$yturl.$twitter.$twitch.$discord;
 		$userinfo = " | UserID: $userID | AccID: $targetAccID";
 		$tag = "<@$stars>, here is the profile of user **$targetUser**:";
 		$msg = "Felicidades tu cuenta ya esta enlazada!!!!";
@@ -634,9 +649,10 @@ class discordLib {
 			case 1: $data = array(
 				'embed'=> [
 					"title"=> $title,
+					"description"=> $usertitle,
 				    "fields"=> [
-						["name"=> $usertitle, "value"=> $userstats],
-						["name"=> $bar, "value"=> $leaderboardinfo]],					
+						["name"=> "────────────", "value"=> $userstats, "inline"=> true],
+						["name"=> "────────────", "value"=> $leaderboardinfo, "inline"=> true]],					
 					"color"=> $color,
 					"footer"=> ["icon_url"=> ($iconhost.$footicon), "text"=> ($foottext.$userinfo)],
 					"thumbnail"=> ["url"=> ($iconhost.$mainIcon)],
@@ -648,9 +664,10 @@ class discordLib {
 				"content"=> $tag,
 				'embed'=> [
 					"title"=> $title,
+					"description"=> $usertitle,
 				    "fields"=> [
-						["name"=> $usertitle, "value"=> $userstats],
-						["name"=> $bar, "value"=> $leaderboardinfo]],					
+						["name"=> "────────────", "value"=> $userstats, "inline"=> true],
+						["name"=> "────────────", "value"=> $leaderboardinfo, "inline"=> true]],					
 					"color"=> $color,
 					"footer"=> ["icon_url"=> ($iconhost.$footicon), "text"=> ($foottext.$userinfo)],
 					"thumbnail"=> ["url"=> ($iconhost.$mainIcon)],
@@ -662,9 +679,10 @@ class discordLib {
 				"content"=> $msg,
 				'embed'=> [
 					"title"=> $title,
+					"description"=> $usertitle,
 				    "fields"=> [
-						["name"=> $usertitle, "value"=> $userstats],
-						["name"=> $bar, "value"=> $leaderboardinfo]],					
+						["name"=> "────────────", "value"=> $userstats, "inline"=> true],
+						["name"=> "────────────", "value"=> $leaderboardinfo, "inline"=> true]],					
 					"color"=> $color,
 					"footer"=> ["icon_url"=> ($iconhost.$footicon), "text"=> ($foottext.$userinfo)],
 					"thumbnail"=> ["url"=> ($iconhost.$mainIcon)],
@@ -1228,6 +1246,30 @@ class discordLib {
 			$data_string = json_encode($data);
 			$this->discordNotify(3, $data_string);
 		}
+	}
+	public function charCount($value){
+		$char = strlen($value);
+		switch($char){
+			case 1: $space = "        ";
+			break;
+			case 2: $space = "       ";
+			break;
+			case 3: $space = "      ";
+			break;
+			case 4: $space = "     ";
+			break;
+			case 5: $space = "    ";
+			break;
+			case 6: $space = "   ";
+			break;
+			case 7: $space = "  ";
+			break;
+			case 8: $space = " ";
+			break;
+			case 9: $space = "";
+			break;
+		}
+		return $space.$value;
 	}
 }
 ?>
