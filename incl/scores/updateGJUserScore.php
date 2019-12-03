@@ -132,6 +132,7 @@ $uploadDate = time();
 	} else {
 		$hostname = $_SERVER['REMOTE_ADDR'];
 	}
+$gs->updatecp(0, $userID);
 $query = $db->prepare("SELECT stars,coins,demons,userCoins,diamonds,creatorPoints FROM users WHERE userID=:userID LIMIT 1"); //getting differences
 $query->execute([':userID' => $userID]);
 $old = $query->fetch();

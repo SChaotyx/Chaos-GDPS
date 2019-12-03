@@ -94,17 +94,13 @@ if(!empty($_POST["userName"]) AND !empty($_POST["password"]) AND !empty($_POST["
 								<label for="usernameField">Admin Data</label>
 								<input type="text" class="form-control" id="usernameField" name="userName" placeholder="Enter username">
 								<input type="password" class="form-control" id="passwordField" name="password" placeholder="Enter password">
-								<label for="packnameField">Pack Name</label>
+								<label for="packnameField">Map Pack Form</label>
 								<input type="text" class="form-control" id="packnameField" name="packName" placeholder="Enter packName">
-								<label for="levelsField">Level IDs</label>
 								<input type="text" class="form-control" id="levelsField" name="levels" placeholder="Enter Level IDs (separate by commas)">
-								<label for="starsField">Stars</label>
 								<input type="text" class="form-control" id="starsField" name="stars" placeholder="Enter Stars (max 10 stars)">
-								<label for="coinsField">Coins</label>
 								<input type="text" class="form-control" id="coinsField" name="coins" placeholder="Enter Coins (max 2 coins)">
-								<label for="difficultyField">Difficulty</label>
 								<input type="text" class="form-control" id="difficultyField" name="difficulty" placeholder="Enter Difficulty">
-								<label for="colorField">Color</label>
+								<label for="colorField">Font Color</label>
 								<input type="text" class="jscolor" id="colorField" name="color" placeholder="Color">
 							</div>
 					<button type="submit" class="btn btn-primary btn-block">'.$dl->getLocalizedString("packCreate").'</button>

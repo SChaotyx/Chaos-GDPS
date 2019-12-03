@@ -19,7 +19,7 @@ $uploadDate = time();
 //usercheck
 if($id != "" AND $comment != "" AND $GJPCheck->check($gjp,$id) == 1){
 	$decodecomment = base64_decode($comment);
-	if($cmds->doProfileCommands($id, $decodecomment)){
+	if($cmds->doProfileCommands($id, $userID, $decodecomment)){
 		exit("-1");
 	}
 	$query = $db->prepare("INSERT INTO acccomments (userName, comment, userID, timeStamp)

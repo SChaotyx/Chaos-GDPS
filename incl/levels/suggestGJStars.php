@@ -28,7 +28,7 @@ if($accountID != "" AND $gjp != ""){
 				if(86400 > $timerated OR $gs->checkPermission($accountID, "adminCommands")){
 				$difficulty = $gs->getDiffFromStars($stars);
 				$gs->rateLevel($accountID, $levelID, $stars, $difficulty["diff"], $difficulty["auto"], $difficulty["demon"], $feature);
-				$gs->updatecp($levelID);
+				$gs->updatecp(1, $levelID);
 				$dis->discordNotifyNew(1, $levelID, 1, 2, 1, 1, $accountID, 1, 0, 0);
 				echo 1;
 				}

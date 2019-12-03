@@ -16,7 +16,7 @@ class dashboardLib{
 						<link rel="stylesheet" href="incl/source/bootstrap.min.css">
 						<link async rel="stylesheet" href="incl/cvolton.css">
 						<link async rel="stylesheet" href="incl/font-awesome-4.7.0/css/font-awesome.min.css">
-						<title>GD-CHAOS</title>
+						<title>GDPS Dashboard</title>
 						<link rel="shortcut icon" href="icon.png" />
 						<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">';
 		echo '		</head>
@@ -85,7 +85,6 @@ class dashboardLib{
 				break;
 		}
 		echo '<nav class="navbar navbar-expand-lg navbar-dark menubar">
-			<a class="navbar-brand" href="index.php">GD Chaos</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -141,6 +140,7 @@ class dashboardLib{
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 						    <a class="dropdown-item" href="admin/levelReupload.php">Level Reupload</a>
 						    <a class="dropdown-item" href="admin/packCreate.php">'.$this->getLocalizedString("packManage").'</a>
+						    <a class="dropdown-item" href="admin/gauntletCreate.php">Create Gauntlet</a>
 							<a class="dropdown-item" href="admin/restrictions.php">'.$this->getLocalizedString("restrictions").'</a>			
 							<a class="dropdown-item" href="admin/passwordRecovery.php">'.$this->getLocalizedString("passrecovery").'</a>					
 						</div>

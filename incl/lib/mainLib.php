@@ -646,14 +646,28 @@ class mainLib {
 	public function rateLevel($accountID, $levelID, $stars, $difficulty, $auto, $demon, $feature){
 		include __DIR__ . "/connection.php";
 		$gs = new mainLib();
-		$rateDate = $gs->getLevelValue($levelID, "rateDate");
+		$query = $db->prepare("SELECT rateDate, levelLength, original FROM levels WHERE levelID = :levelID");
+		$query->execute([':levelID'=>$levelID]);
+		if($query->rowCount() == 0){ return false; }
+		$result = $query->fetchAll();
+		foreach($result as $lvl){
+			$rateDate = $lvl["rateDate"];
+			$length = $lvl["levelLength"];
+			$original = $lvl["original"];
+		}
 		if($rateDate == 0){
 			$rateDate = time();
 		}
+		//Dinamic Creator Point Count
+		if($length == 2 OR $original == 1 OR $feature == 0){
+			$cpCount = 1;
+		}else{
+			$cpCount = 2;
+		}
 		//lets assume the perms check is done properly before
-		$query = "UPDATE levels SET starDemon=:demon, starAuto=:auto, starDifficulty=:diff, starStars=:stars, rateDate=:now, starCoins='1', starFeatured=:feature, starEpic='0' WHERE levelID=:levelID";
+		$query = "UPDATE levels SET starDemon=:demon, starAuto=:auto, starDifficulty=:diff, starStars=:stars, rateDate=:now, starCoins='1', starFeatured=:feature, starEpic='0', cpCount=:cpCount WHERE levelID=:levelID";
 		$query = $db->prepare($query);	
-		$query->execute([':demon' => $demon, ':auto' => $auto, ':diff' => $difficulty, ':stars' => $stars, ':levelID'=>$levelID, ':now' =>$rateDate, ':feature'=>$feature]);	
+		$query->execute([':demon' => $demon, ':auto' => $auto, ':diff' => $difficulty, ':stars' => $stars, ':levelID'=>$levelID, ':now' =>$rateDate, ':feature'=>$feature, ':cpCount'=> $cpCount]);
 		//check mod action
 		$query = $db->prepare("SELECT count(*) FROM modactions WHERE type=:type AND value3=:itemID AND account=:account");
 		$query->execute([':type' => 1, ':itemID' => $levelID, ':account' => $accountID]);
@@ -877,53 +891,41 @@ class mainLib {
         }
     }
 }
-	//UPDATE CP V1.2 (gauntlet cp's count | medium starred levels 1 cp)
-  public function updatecp($levelID){
-	include __DIR__ . "/connection.php";
-	//getting userID
-	$query = $db->prepare("SELECT userID FROM levels WHERE levelID = :lvlid AND isDeleted = 0");
-	$query->execute([':lvlid' => $levelID]);
-	if ($query->rowCount() > 0) {
-	$userID = $query->fetchColumn();
-	//getting starred lvls count
-	$query2 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starStars != 0 AND levelLength > 2 AND original != 1");
-	$query2->execute([':userID' => $userID]);
-	$creatorpoints = $query2->fetchColumn();
-	//getting featured lvls count
-	$query3 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starFeatured != 0 AND levelLength > 2 AND original != 1");
-	$query3->execute([':userID' => $userID]);
-	$cpgain = $query3->fetchColumn();
-	$creatorpoints = $creatorpoints + $cpgain;
-	//getting epic lvls count
-	$query3 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starEpic != 0 AND levelLength > 2 AND original != 1");
-	$query3->execute([':userID' => $userID]);
-	$cpgain = $query3->fetchColumn();
-	$creatorpoints = $creatorpoints + $cpgain;
-	//getting starred medium lvls count
-	$query4 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starStars != 0 AND levelLength = 2 AND original != 1");
-	$query4->execute([':userID' => $userID]);
-	$cpgain = $query4->fetchColumn();
-	$creatorpoints = $creatorpoints + $cpgain;
-	//getting starred reuploaded lvls count
-	$query5 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND starStars != 0 AND original = 1");
-	$query5->execute([':userID' => $userID]);
-	$cpgain = $query5->fetchColumn();
-	$creatorpoints = $creatorpoints + $cpgain;
-	//getting gauntlet levels count
-	$query6 = $db->prepare("SELECT level1, level2, level3, level4, level5 FROM gauntlets");
-	$query6->execute();
-	$levelgauntlet = $query6->fetchAll();
-	foreach($levelgauntlet as $gauntlet){
-		for($x = 1; $x < 6; $x++){
-			$query7 = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND levelID = :levelIDgauntlet");
-			$query7->execute([':userID' => $userID, ':levelIDgauntlet' => $gauntlet["level".$x]]);
-			$cpgain = $query7->fetchColumn();
-			$creatorpoints = $creatorpoints + $cpgain;
+  	//UPDATE CP V1.3 Optimizing query count and dinamic cp's count per level
+  	public function updatecp($idtype, $id){
+		include __DIR__ . "/connection.php";
+		if($idtype == 1){ //id type 1 = levelID 
+			//getting userID from levelID
+			$query = $db->prepare("SELECT userID FROM levels WHERE levelID = :lvlid AND isDeleted = 0");
+			$query->execute([':lvlid' => $id]);
+			if ($query->rowCount() == 0) { return false; }
+			$id = $query->fetchColumn();
 		}
-	}
-	//inserting cp value
-	$query8 = $db->prepare("UPDATE users SET creatorPoints = :creatorpoints WHERE userID=:userID");
-	$query8->execute([':userID' => $userID, ':creatorpoints' => $creatorpoints]);
-	}
-  }
+		//getting cp total count from levels where "cpCount"
+		$query = $db->prepare("SELECT SUM(cpCount) AS cp_count FROM levels WHERE userID = :userID AND starStars != 0");
+		$query->execute([':userID' => $id]);
+		if ($query->rowCount() == 0) { return false; }
+		$result = $query->fetchAll();
+		foreach($result as $level){
+			$cpCount = $level["cp_count"];
+		}
+		//getting gauntlet levels count
+		$query = $db->prepare("SELECT level1, level2, level3, level4, level5 FROM gauntlets");
+		$query->execute();
+		if ($query->rowCount() !== 0) {
+			$levelgauntlet = $query->fetchAll();
+			foreach($levelgauntlet as $gauntlet){
+				for($x = 1; $x < 6; $x++){
+					$query = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND levelID = :levelIDgauntlet");
+					$query->execute([':userID' => $userID, ':levelIDgauntlet' => $gauntlet["level".$x]]);
+					$cpGain = $query->fetchColumn();
+					$cpCount = $cpCount + $cpGain;
+				}
+			}
+		}
+		//inserting cp value
+		$query = $db->prepare("UPDATE users SET creatorPoints = :creatorpoints WHERE userID=:userID");
+		$query->execute([':userID' => $id, ':creatorpoints' => $cpCount]);
+		return $cpCount;
+  	}
 }

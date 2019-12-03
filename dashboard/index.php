@@ -53,12 +53,13 @@ $query = $db->prepare("SELECT count(*) FROM users WHERE lastPlayed > :lastPlayed
 $query->execute([':lastPlayed' => $timeago]);
 $activeusers = $query->fetchColumn();
 
-$dl->printPage('<p>Welcome to the Geometry Dash Chaos Dashboard. Please choose a tool above.
+$dl->printPage('<p>Welcome to the Geometry Dash Private Server Dashboard. Please choose a tool above.
 				<br>------------------------------------
 				<br>Registered accounts: '.$totalaccounts.'.
 				<br>Active users: '.$activeusers.'.
 				<br>------------------------------------
 				<br>Cvolton GDPS Source <a href="https://github.com/Cvolton/GMDprivateServer">Here</a>.
+				<br>Forked Repository <a href="https://github.com/SChaotyx/GMDprivateServer">Here</a>.
 					<div class="chart-container" style="position: relative; height:30vh; width:80vw">
 						<canvas id="levelsChart"></canvas>
 					</div>
@@ -67,5 +68,5 @@ $dl->printPage('<p>Welcome to the Geometry Dash Chaos Dashboard. Please choose a
 						<canvas id="levelsChart2"></canvas>
 					</div>
 				<br>
-				</p><iframe src="https://discordapp.com/widget?id=427525423102951446&theme=dark" width="500" height="350" allowtransparency="true" frameborder="0"></iframe>' . $dl->generateLineChart("levelsChart","Levels Uploaded",$chartdata) . $dl->generateLineChart("levelsChart2","Levels Uploaded",$levelsChart2), false);
+				</p>' . $dl->generateLineChart("levelsChart","Levels Uploaded",$chartdata) . $dl->generateLineChart("levelsChart2","Levels Uploaded",$levelsChart2), false);
 ?>
