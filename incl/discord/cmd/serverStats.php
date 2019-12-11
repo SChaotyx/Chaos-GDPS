@@ -118,6 +118,5 @@ $data = array(
 					"image"=> ["url"=> ($iconhost.$image)]
 				]);
 $data_string = json_encode($data);
-//$dis->discordNotify($_POST['channel'], $data_string);
-echo $data_string;
+$dis->discordNotify($_POST['channel'], $data_string);
 ?>
