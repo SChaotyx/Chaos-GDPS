@@ -119,4 +119,5 @@ $data = array(
 				]);
 $data_string = json_encode($data);
 $dis->discordNotify($_POST['channel'], $data_string);
+echo "Server Stats CMD"
 ?>
