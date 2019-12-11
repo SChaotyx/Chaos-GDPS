@@ -69,9 +69,10 @@ foreach($result as $pack){
 	$secretcoins += $pack["coins"];
 }
 //DISCORD NOTIFY
-$starsMax = $stars;
-$usercMax = $usercoins;
-$demonsMax = $demons;
+$starsMax = $dis->charCount($stars);
+$usercMax = $dis->charCount($usercoins);
+$demonsMax = $dis->charCount($demons);
+$secretcoins = $dis->charCount($secretcoins);
 //accounts
 $query = $db->prepare("SELECT count(*) FROM accounts");
 $query->execute();
@@ -89,31 +90,34 @@ $ratedlevelcount = $query->fetchColumn();
 //content message
 $tag = "<@".$_POST['tagID'].">, Here Geometry Dash Chaos Stats:";
 $info = "These are the maximum leaderboard stats to date";
-$gdpsstats = "$icon_star $starsMax | $icon_diamond ??? | $icon_secretcoin $secretcoins | $icon_verifycoins $usercMax | $icon_demon $demonsMax";
+$gdpsstats = "$icon_star `$starsMax`\n$icon_diamond `      ???`\n$icon_secretcoin `$secretcoins`\n$icon_verifycoins `$usercMax`\n$icon_demon `$demonsMax`";
 $bar = "───────────────────";
 $gdpsinfo = "
-__Levels__
+$icon_play __Levels__
 **Total levels:** $levelcount
-**Total rated levels:** $ratedlevelcount
-__Accounts__
-**Registered accounts:** $totalaccounts
+**Rated levels:** $ratedlevelcount
+$icon_friends __Accounts__
+**Registered:** $totalaccounts
 **Active users:** $activeusers";
-$boticon = "misc/auto.png";
+$boticon = "misc/gdpsbot.png";
 $botinfo = "Chaos-Bot";
-$thumbnail = "misc/gdps.png";
+$thumbnail = "misc/gdpsthumb.png";
+$image = "misc/gdpslogo.png";
 //BUILD JSON
 $data = array(
 				"content"=> $tag,
 				'embed'=> [
 					"title"=> $dis->title(25),
+					"description"=> $info,
 				    "fields"=> [
-						["name"=> $info, "value"=> $gdpsstats],
-						["name"=> $bar, "value"=> $gdpsinfo]],					
+						["name"=> "────────────", "value"=> $gdpsstats, "inline"=> true],
+						["name"=> "────────────", "value"=> $gdpsinfo, "inline"=> true]],					
 					"color"=> $dis->embedColor(7),
 					"footer"=> ["icon_url"=> ($iconhost.$boticon), "text"=> $botinfo],
 					"thumbnail"=> ["url"=> ($iconhost.$thumbnail)],
+					"image"=> ["url"=> ($iconhost.$image)]
 				]);
 $data_string = json_encode($data);
-$dis->discordNotify($_POST['channel'], $data_string);
-echo "Stats command: Done!";
+//$dis->discordNotify($_POST['channel'], $data_string);
+echo $data_string;
 ?>

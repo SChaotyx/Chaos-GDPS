@@ -22,12 +22,12 @@ $query = $db->prepare("SELECT * FROM users WHERE $type AND isBanned = 0 ORDER BY
 if($type === "creatorPoints"){
     $query = $db->prepare("SELECT * FROM users WHERE $type AND isCreatorBanned = 0 ORDER BY $type DESC LIMIT 10");
 }
-$query->execute([':userName' => $userName]);
+$query->execute();
 if($query->rowCount() == 0){
 	$nothing = "<@".$_POST['tagID'].">, Nothing Found";
 	$data = array("content"=> $nothing);                                               
 	$data_string = json_encode($data);
-	$dis->discordNotify($channelID, $data_string);
+	$dis->discordNotify($_POST['channel'], $data_string);
 	exit ("profile Command: nothing found");
 }
 $array = $query->fetchAll();
@@ -84,7 +84,7 @@ $data = array(
             "value"=> "⠀$icon_star `".$Lstars[9]."`|$icon_diamond `".$Ldiamond[9]."`|$icon_secretcoin `".$Lscoins[9]."`|$icon_verifycoins `".$Lucoins[9]."`|$icon_demon `".$Ldemons[9]."`|$icon_cp `".$Lcp[9]."`\n───────────────────"]],
         "color"=> $dis->embedColor(7),
         "footer"=> ["text"=> "Leaderboard dated on: ".date('Y-m-d H:i:s')],
-        "thumbnail"=> ["url"=> ($iconhost."misc/gdps.png")],
+        "thumbnail"=> ["url"=> ($iconhost."misc/gdpsthumb.png")],
     ]);
 $data_string = json_encode($data);
 $dis->discordNotify($_POST['channel'], $data_string);
