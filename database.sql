@@ -1,32 +1,13 @@
--- phpMyAdmin SQL Dump
--- version 4.8.5
--- https://www.phpmyadmin.net/
---
--- Servidor: localhost
--- Tiempo de generación: 26-09-2019 a las 10:58:08
--- Versión del servidor: 10.3.16-MariaDB
--- Versión de PHP: 7.3.2
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
-
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- Base de datos: `database gdps`
---
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `acccomments`
---
 
 CREATE TABLE `acccomments` (
   `userID` int(11) NOT NULL,
@@ -38,12 +19,6 @@ CREATE TABLE `acccomments` (
   `likes` int(11) NOT NULL DEFAULT 0,
   `isSpam` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `accounts`
---
 
 CREATE TABLE `accounts` (
   `userName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -68,14 +43,8 @@ CREATE TABLE `accounts` (
   `friendsCount` int(11) NOT NULL DEFAULT 0,
   `saveKey` blob NOT NULL,
   `discordID` bigint(20) NOT NULL DEFAULT 0,
-  `discordLinkReq` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 0
+  `discordLinkReq` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `actions`
---
 
 CREATE TABLE `actions` (
   `ID` int(11) NOT NULL,
@@ -90,34 +59,16 @@ CREATE TABLE `actions` (
   `account` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `bannedips`
---
-
 CREATE TABLE `bannedips` (
   `IP` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '127.0.0.1',
   `ID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `blocks`
---
 
 CREATE TABLE `blocks` (
   `ID` int(11) NOT NULL,
   `person1` int(11) NOT NULL,
   `person2` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `comments`
---
 
 CREATE TABLE `comments` (
   `userID` int(11) NOT NULL,
@@ -132,23 +83,11 @@ CREATE TABLE `comments` (
   `isSpam` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `cpshares`
---
-
 CREATE TABLE `cpshares` (
   `shareID` int(11) NOT NULL,
   `levelID` int(11) NOT NULL,
   `userID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `dailyfeatures`
---
 
 CREATE TABLE `dailyfeatures` (
   `feaID` int(11) NOT NULL,
@@ -156,12 +95,6 @@ CREATE TABLE `dailyfeatures` (
   `timestamp` int(11) NOT NULL,
   `type` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `friendreqs`
---
 
 CREATE TABLE `friendreqs` (
   `accountID` int(11) NOT NULL,
@@ -172,12 +105,6 @@ CREATE TABLE `friendreqs` (
   `isNew` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `friendships`
---
-
 CREATE TABLE `friendships` (
   `ID` int(11) NOT NULL,
   `person1` int(11) NOT NULL,
@@ -185,12 +112,6 @@ CREATE TABLE `friendships` (
   `isNew1` int(11) NOT NULL,
   `isNew2` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `gauntlets`
---
 
 CREATE TABLE `gauntlets` (
   `ID` int(11) NOT NULL,
@@ -200,12 +121,6 @@ CREATE TABLE `gauntlets` (
   `level4` int(11) NOT NULL,
   `level5` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `levels`
---
 
 CREATE TABLE `levels` (
   `gameVersion` int(11) NOT NULL,
@@ -248,6 +163,7 @@ CREATE TABLE `levels` (
   `unlisted` int(11) NOT NULL,
   `originalReup` int(11) NOT NULL DEFAULT 0 COMMENT 'used for levelReupload.php',
   `hostname` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `cpCount` int(11) NOT NULL DEFAULT 0,
   `isCPShared` int(11) NOT NULL DEFAULT 0,
   `isDeleted` int(11) NOT NULL DEFAULT 0,
   `isLDM` int(11) NOT NULL DEFAULT 0,
@@ -259,12 +175,6 @@ CREATE TABLE `levels` (
   `sendcount` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `levelscores`
---
-
 CREATE TABLE `levelscores` (
   `scoreID` int(11) NOT NULL,
   `accountID` int(11) NOT NULL,
@@ -274,12 +184,6 @@ CREATE TABLE `levelscores` (
   `attempts` int(11) NOT NULL DEFAULT 0,
   `coins` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `links`
---
 
 CREATE TABLE `links` (
   `ID` int(11) NOT NULL,
@@ -291,12 +195,6 @@ CREATE TABLE `links` (
   `targetUserID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `mappacks`
---
-
 CREATE TABLE `mappacks` (
   `ID` int(11) NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -307,12 +205,6 @@ CREATE TABLE `mappacks` (
   `rgbcolors` varchar(11) COLLATE utf8_unicode_ci NOT NULL COMMENT 'entered as R,G,B',
   `colors2` varchar(11) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'none'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `messages`
---
 
 CREATE TABLE `messages` (
   `userID` int(11) NOT NULL,
@@ -326,12 +218,6 @@ CREATE TABLE `messages` (
   `secret` varchar(25) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'unused',
   `isNew` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `modactions`
---
 
 CREATE TABLE `modactions` (
   `ID` int(11) NOT NULL,
@@ -347,30 +233,14 @@ CREATE TABLE `modactions` (
   `value7` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `modipperms`
---
-
 CREATE TABLE `modipperms` (
   `categoryID` int(11) NOT NULL,
   `actionFreeCopy` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `modipperms`
---
-
 INSERT INTO `modipperms` (`categoryID`, `actionFreeCopy`) VALUES
 (1, 0),
 (2, 1);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `modips`
---
 
 CREATE TABLE `modips` (
   `ID` int(11) NOT NULL,
@@ -380,23 +250,11 @@ CREATE TABLE `modips` (
   `modipCategory` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `poll`
---
-
 CREATE TABLE `poll` (
   `accountID` int(11) NOT NULL,
   `pollOption` varchar(255) NOT NULL,
   `optionID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `quests`
---
 
 CREATE TABLE `quests` (
   `ID` int(11) NOT NULL,
@@ -406,10 +264,6 @@ CREATE TABLE `quests` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Volcado de datos para la tabla `quests`
---
-
 INSERT INTO `quests` (`ID`, `type`, `amount`, `reward`, `name`) VALUES
 (1, 1, 200, 10, 'Orbs!!!'),
 (2, 2, 3, 30, 'Coins!!!'),
@@ -418,23 +272,11 @@ INSERT INTO `quests` (`ID`, `type`, `amount`, `reward`, `name`) VALUES
 (5, 2, 6, 60, 'Coin Colector!!!'),
 (6, 3, 10, 30, 'More Stars!!!');
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `reports`
---
-
 CREATE TABLE `reports` (
   `ID` int(11) NOT NULL,
   `levelID` int(11) NOT NULL,
   `hostname` varchar(255) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `restrictions`
---
 
 CREATE TABLE `restrictions` (
   `ID` bigint(20) NOT NULL,
@@ -443,23 +285,11 @@ CREATE TABLE `restrictions` (
   `userID` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `roleassign`
---
-
 CREATE TABLE `roleassign` (
   `assignID` bigint(20) NOT NULL,
   `roleID` bigint(20) NOT NULL,
   `accountID` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `roles`
---
 
 CREATE TABLE `roles` (
   `roleID` bigint(11) NOT NULL,
@@ -487,10 +317,6 @@ CREATE TABLE `roles` (
   `modBadgeLevel` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Volcado de datos para la tabla `roles`
---
-
 INSERT INTO `roles` (`roleID`, `priority`, `roleName`, `ownCommands`, `elderCommands`, `headCommands`, `adminCommands`, `devCommands`, `commandDaily`, `actionRateDemon`, `actionRateStars`, `actionSentLevel`, `actionRateDifficulty`, `actionRequestMod`, `toolLeaderboardsban`, `toolPackcreate`, `toolModactions`, `dashboardModTools`, `dashboardAdminTools`, `modipCategory`, `isDefault`, `commentColor`, `modBadgeLevel`) VALUES
 (1, 0, 'No mod', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, '255,255,255', 0),
 (2, 1, 'Moderator', 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, '255,255,255', 1),
@@ -499,12 +325,6 @@ INSERT INTO `roles` (`roleID`, `priority`, `roleName`, `ownCommands`, `elderComm
 (5, 4, 'Admin', 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 2, 1, 1, 1, 1, 1, 2, 0, '000,255,125', 2),
 (6, 5, 'Developer', 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 2, 1, 1, 1, 1, 1, 2, 0, '000,255,125', 2),
 (7, 6, 'Owner', 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 2, 1, 1, 1, 1, 1, 2, 0, '000,255,255', 2);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `songs`
---
 
 CREATE TABLE `songs` (
   `ID` int(11) NOT NULL,
@@ -518,12 +338,6 @@ CREATE TABLE `songs` (
   `levelsCount` int(11) NOT NULL DEFAULT 0,
   `reuploadTime` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `users`
---
 
 CREATE TABLE `users` (
   `isRegistered` int(11) NOT NULL,
@@ -554,6 +368,7 @@ CREATE TABLE `users` (
   `diamonds` int(11) NOT NULL DEFAULT 0,
   `orbs` int(11) NOT NULL DEFAULT 0,
   `completedLvls` int(11) NOT NULL DEFAULT 0,
+  `completedMapPacks` int(11) NOT NULL DEFAULT 0,
   `accSpider` int(11) NOT NULL DEFAULT 0,
   `accExplosion` int(11) NOT NULL DEFAULT 0,
   `chest1time` int(11) NOT NULL DEFAULT 0,
@@ -564,73 +379,40 @@ CREATE TABLE `users` (
   `isCreatorBanned` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Índices para tablas volcadas
---
 
---
--- Indices de la tabla `acccomments`
---
 ALTER TABLE `acccomments`
   ADD PRIMARY KEY (`commentID`),
   ADD KEY `userID` (`userID`);
 
---
--- Indices de la tabla `accounts`
---
 ALTER TABLE `accounts`
   ADD PRIMARY KEY (`accountID`),
   ADD UNIQUE KEY `userName` (`userName`),
   ADD KEY `isAdmin` (`isAdmin`);
 
---
--- Indices de la tabla `actions`
---
 ALTER TABLE `actions`
   ADD PRIMARY KEY (`ID`);
 
---
--- Indices de la tabla `bannedips`
---
 ALTER TABLE `bannedips`
   ADD PRIMARY KEY (`ID`);
 
---
--- Indices de la tabla `blocks`
---
 ALTER TABLE `blocks`
   ADD PRIMARY KEY (`ID`),
   ADD UNIQUE KEY `ID` (`ID`);
 
---
--- Indices de la tabla `comments`
---
 ALTER TABLE `comments`
   ADD PRIMARY KEY (`commentID`),
   ADD KEY `levelID` (`levelID`);
 
---
--- Indices de la tabla `cpshares`
---
 ALTER TABLE `cpshares`
   ADD PRIMARY KEY (`shareID`);
 
---
--- Indices de la tabla `dailyfeatures`
---
 ALTER TABLE `dailyfeatures`
   ADD PRIMARY KEY (`feaID`);
 
---
--- Indices de la tabla `friendreqs`
---
 ALTER TABLE `friendreqs`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `toAccountID` (`toAccountID`);
 
---
--- Indices de la tabla `friendships`
---
 ALTER TABLE `friendships`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `person1` (`person1`),
@@ -638,16 +420,10 @@ ALTER TABLE `friendships`
   ADD KEY `isNew1` (`isNew1`),
   ADD KEY `isNew2` (`isNew2`);
 
---
--- Indices de la tabla `gauntlets`
---
 ALTER TABLE `gauntlets`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `level5` (`level5`);
 
---
--- Indices de la tabla `levels`
---
 ALTER TABLE `levels`
   ADD PRIMARY KEY (`levelID`),
   ADD KEY `levelID` (`levelID`),
@@ -665,96 +441,51 @@ ALTER TABLE `levels`
   ADD KEY `levelLength` (`levelLength`),
   ADD KEY `twoPlayer` (`twoPlayer`);
 
---
--- Indices de la tabla `levelscores`
---
 ALTER TABLE `levelscores`
   ADD PRIMARY KEY (`scoreID`),
   ADD KEY `levelID` (`levelID`);
 
---
--- Indices de la tabla `links`
---
 ALTER TABLE `links`
   ADD PRIMARY KEY (`ID`);
 
---
--- Indices de la tabla `mappacks`
---
 ALTER TABLE `mappacks`
   ADD PRIMARY KEY (`ID`);
 
---
--- Indices de la tabla `messages`
---
 ALTER TABLE `messages`
   ADD PRIMARY KEY (`messageID`),
   ADD KEY `toAccountID` (`toAccountID`);
 
---
--- Indices de la tabla `modactions`
---
 ALTER TABLE `modactions`
   ADD PRIMARY KEY (`ID`);
 
---
--- Indices de la tabla `modipperms`
---
 ALTER TABLE `modipperms`
   ADD PRIMARY KEY (`categoryID`);
 
---
--- Indices de la tabla `modips`
---
 ALTER TABLE `modips`
   ADD PRIMARY KEY (`ID`);
 
---
--- Indices de la tabla `poll`
---
 ALTER TABLE `poll`
   ADD PRIMARY KEY (`optionID`);
 
---
--- Indices de la tabla `quests`
---
 ALTER TABLE `quests`
   ADD PRIMARY KEY (`ID`);
 
---
--- Indices de la tabla `reports`
---
 ALTER TABLE `reports`
   ADD PRIMARY KEY (`ID`);
 
---
--- Indices de la tabla `restrictions`
---
 ALTER TABLE `restrictions`
   ADD PRIMARY KEY (`ID`);
 
---
--- Indices de la tabla `roleassign`
---
 ALTER TABLE `roleassign`
   ADD PRIMARY KEY (`assignID`);
 
---
--- Indices de la tabla `roles`
---
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`roleID`);
 
---
--- Indices de la tabla `songs`
---
 ALTER TABLE `songs`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `name` (`name`);
 
---
--- Indices de la tabla `users`
---
 ALTER TABLE `users`
   ADD PRIMARY KEY (`userID`),
   ADD KEY `userID` (`userID`),
@@ -771,169 +502,85 @@ ALTER TABLE `users`
   ADD KEY `isBanned` (`isBanned`),
   ADD KEY `isCreatorBanned` (`isCreatorBanned`);
 
---
--- AUTO_INCREMENT de las tablas volcadas
---
 
---
--- AUTO_INCREMENT de la tabla `acccomments`
---
 ALTER TABLE `acccomments`
   MODIFY `commentID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `accounts`
---
 ALTER TABLE `accounts`
   MODIFY `accountID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `actions`
---
 ALTER TABLE `actions`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `bannedips`
---
 ALTER TABLE `bannedips`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `blocks`
---
 ALTER TABLE `blocks`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `comments`
---
 ALTER TABLE `comments`
   MODIFY `commentID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `cpshares`
---
 ALTER TABLE `cpshares`
   MODIFY `shareID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `dailyfeatures`
---
 ALTER TABLE `dailyfeatures`
   MODIFY `feaID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `friendreqs`
---
 ALTER TABLE `friendreqs`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `friendships`
---
 ALTER TABLE `friendships`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `gauntlets`
---
 ALTER TABLE `gauntlets`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `levels`
---
 ALTER TABLE `levels`
   MODIFY `levelID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `levelscores`
---
 ALTER TABLE `levelscores`
   MODIFY `scoreID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `links`
---
 ALTER TABLE `links`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `mappacks`
---
 ALTER TABLE `mappacks`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `messages`
---
 ALTER TABLE `messages`
   MODIFY `messageID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `modactions`
---
 ALTER TABLE `modactions`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `modipperms`
---
 ALTER TABLE `modipperms`
   MODIFY `categoryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
---
--- AUTO_INCREMENT de la tabla `modips`
---
 ALTER TABLE `modips`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `poll`
---
 ALTER TABLE `poll`
   MODIFY `optionID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `quests`
---
 ALTER TABLE `quests`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
---
--- AUTO_INCREMENT de la tabla `reports`
---
 ALTER TABLE `reports`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `restrictions`
---
 ALTER TABLE `restrictions`
   MODIFY `ID` bigint(20) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `roleassign`
---
 ALTER TABLE `roleassign`
   MODIFY `assignID` bigint(20) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `roles`
---
 ALTER TABLE `roles`
-  MODIFY `roleID` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `roleID` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
---
--- AUTO_INCREMENT de la tabla `songs`
---
 ALTER TABLE `songs`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `users`
---
 ALTER TABLE `users`
   MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
