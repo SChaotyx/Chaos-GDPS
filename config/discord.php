@@ -7,7 +7,9 @@ $channel1 = ""; //mod action channel id
 $channel2 = ""; //public actions channel id
 $channel3 = ""; //bot actions channel id
 $prefix = ""; //bot prefix
-$memberRole = ""; //gdps member role id
-$starsRole = ""; //stars role
-$ratedLevelsRole = ""; //rated levels role
+$role1 = ""; //gdps member role id
+$role2 = ""; //500 stars role
+$role3 = ""; //750 stars + 5 rated levels role
+$role4 = ""; //1500 stars + 25 map packs
+$role5 = ""; //3000 stars + all map pack
 ?>

@@ -132,7 +132,7 @@ $uploadDate = time();
 	} else {
 		$hostname = $_SERVER['REMOTE_ADDR'];
 	}
-$gs->updatecp(0, $userID);
+//$gs->updatecp(0, $userID);
 $query = $db->prepare("SELECT stars,coins,demons,userCoins,diamonds,creatorPoints FROM users WHERE userID=:userID LIMIT 1"); //getting differences
 $query->execute([':userID' => $userID]);
 $old = $query->fetch();
@@ -148,8 +148,17 @@ $query = $db->prepare("UPDATE users SET gameVersion=:gameVersion, userName=:user
 $query->execute([':gameVersion' => $gameVersion, ':userName' => $userName, ':coins' => $coins, ':secret' => $secret, ':stars' => $stars, ':demons' => $demons, ':icon' => $icon, ':color1' => $color1, ':color2' => $color2, ':iconType' => $iconType, ':userCoins' => $userCoins, ':special' => $special, ':accIcon' => $accIcon, ':accShip' => $accShip, ':accBall' => $accBall, ':accBird' => $accBird, ':accDart' => $accDart, ':accRobot' => $accRobot, ':accGlow' => $accGlow, ':hostname' => $hostname, ':uploadDate' => $uploadDate, ':userID' => $userID, ':accSpider'=>$accSpider, ':accExplosion'=>$accExplosion, ':diamonds'=>$diamonds]);
 $query2->execute([':timestamp' => time(), ':stars' => $starsdiff, ':account' => $userID, ':coinsd' => $coindiff, ':demon' => $demondiff, ':usrco' => $ucdiff, ':diamond' => $diadiff]);
 if(is_numeric($_POST["accountID"])){
-	$dis->discordNotifyNew(2, $_POST["accountID"], 2, 1, 18, 7, 1, 0, 0, 0);
-	$dis->roleAssign($_POST["accountID"], 1, $stars, $creatorPoints);
+	$userData = array(
+		"userName" => $userName,
+		"stars" => $stars, "starsDiff" => $starsdiff,
+		"coins" => $coins, "coinsDiff" => $coindiff,
+		"demons" => $demons, "demonsDiff" => $demondiff,
+		"uc" => $userCoins, "ucDiff" => $ucdiff,
+		"diamonds" => $diamonds, "diamondsDiff" => $diadiff
+	);
+	$dis->publicAction(1, $userData, 0);
+	//$dis->discordNotifyNew(2, $_POST["accountID"], 2, 1, 18, 7, 1, 0, 0, 0);
+	$dis->roleAssign($_POST["accountID"]);
 }
 echo $userID;
 ?>

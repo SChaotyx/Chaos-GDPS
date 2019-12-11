@@ -6,11 +6,11 @@ class discordLib {
 			return false;
 		}
 		switch($id){
-			case 1: $channelID = $channel1;
+			case 1: $channelID = $channel1; //modactions
 			break;
-			case 2: $channelID = $channel2;
+			case 2: $channelID = $channel2; //publicactions
 			break;
-			case 3: $channelID = $channel3;
+			case 3: $channelID = $channel3; //botspam cmd
 			break;
 			default: $channelID = $id;
 			break;
@@ -38,9 +38,11 @@ class discordLib {
 			return false;
 		}
 		switch($id){
-			case 1: $channelID = $channel1;
+			case 1: $channelID = $channel1; //mod actions
 			break;
-			case 2: $channelID = $channel2;
+			case 2: $channelID = $channel2; //public actions
+			break;
+			case 3: $channelID = $channel3; //botspam cmd
 			break;
 			default: $channelID = $id;
 			break;
@@ -144,6 +146,57 @@ class discordLib {
 		curl_close($crl);
 		return $response;	
 	}
+	public function publicAction($objectType, $objData, $action){
+		//objectID 0 = level, 1 = profile
+		include __DIR__ . "/../../config/discord.php";
+		include __DIR__ . "/../discord/emojis.php";
+		//
+		//LEVELS
+		//
+		if($objectType == 0){
+			$levelName = $objData["levelName"];
+			$userName = $objData["userName"];
+			$original = $objData["original"];
+			$objects = $objData["objects"];
+			if($original > 0){ $copy = $icon_copy; }else{ $copy = ""; }
+			$desc = "$icon_play **__".$levelName."__** by $userName $copy";
+			$levelInfo = "levelID: ".$objData["levelID"];
+			switch($action){
+				case 1: $action = "$icon_info New recent level uploaded!!!";
+				break;
+				case 2: $action = "$icon_info Level Updated!!!";
+				break;
+			}
+			$data = array(
+				'embed'=> [
+					"title"=> $action,
+					"description"=> $desc,
+					"footer"=> ["icon_url"=> ($iconhost."misc/gdpsbot.png"), "text"=> $levelInfo],
+				]);
+			$data_string = json_encode($data);
+			$this->discordNotify(2, $data_string);
+		}
+		if($objectType == 1){
+			$user = ":chart_with_upwards_trend: __**".$objData["userName"]."'s**__ Stats";
+			$stats = "$icon_star `".$this->charCount($objData["stars"])."`\n$icon_diamond `".$this->charCount($objData["diamonds"])."`\n$icon_secretcoin `".$this->charCount($objData["coins"])."`\n$icon_verifycoins `".$this->charCount($objData["uc"])."`\n$icon_demon `".$this->charCount($objData["demons"])."`";
+			$statsDiff = "$icon_star `".$this->charCount($objData["starsDiff"])."`\n$icon_diamond `".$this->charCount($objData["diamondsDiff"])."`\n$icon_secretcoin `".$this->charCount($objData["coinsDiff"])."`\n$icon_verifycoins `".$this->charCount($objData["ucDiff"])."`\n$icon_demon `".$this->charCount($objData["demonsDiff"])."`";
+			$data = array(
+				'embed'=> [
+					"title"=> "$icon_info User Stats Updated!!!",
+					"description" => $user,
+					"fields" => [
+						["name" => "────────────", "value" => $stats, "inline" => true],
+						["name" => "────Diff────", "value" => $statsDiff, "inline" => true],
+					],
+					"footer"=> ["icon_url"=> ($iconhost."misc/gdpsbot.png"), "text"=> $levelInfo],
+				]);
+			$data_string = json_encode($data);
+			$this->discordNotify(2, $data_string);
+		}
+		//
+		//PROFILES
+		//
+	}
 	public function title($id){
 		include __DIR__ . "/../discord/emojis.php";
 		switch($id){
@@ -226,9 +279,11 @@ class discordLib {
 			$objects = $level["objects"];
 			$requestedStars = $level["requestedStars"];
 			$original = $level["original"];
+			$originalReup = $level["originalReup"];
 			$audioTrack = $level["audioTrack"];
 			$songID = $level["songID"];
 			$extID = $level["extID"];
+			$cpCount = $level["cpCount"];
 			if($songID == 0){
 				$songinfo = "";
 				switch($audioTrack){
@@ -290,7 +345,7 @@ class discordLib {
 						$songauthor = $song["authorName"];
 						$songsize = $song["size"];	
 						$songdesc =  "__".$songname."__ by $songauthor";
-						if($songID < 5100000){
+						if($songID < 5000000){
 							$downloadmp3 = rawurldecode($song["download"]);
 							$songinfo = 
 								"SongID: $songID - Size: ".$songsize."MB\n".
@@ -360,6 +415,15 @@ class discordLib {
 			$copylevel = "$icon_copy**Original:** $original";
 			$copylevelc = "$icon_copy";
 			}
+			if($original == 1){
+				$copylevel = "$icon_copy**Original Reupload:** ".$originalReup;
+			}
+		}
+		if($cpCount != 0){
+			$cpCount = $this->charCount($cpCount);
+			$cpCount = "$icon_cp `$cpCount`\n";
+		}else{
+			$cpCount = "";
 		}
 		$downloads = $this->charCount($downloads);
 		$likes = $this->charCount($likes);
@@ -369,8 +433,8 @@ class discordLib {
 		$description = "**Description:** $desc";
 		$usercoins = "Coins: $coinscount";
 		$stats = 
-		    "$icon_download2 `‌$downloads` \n $likeicon `$likes` \n $icon_length `$Length`\n".
-		    "───────────────────";
+		    "$icon_download2 `‌$downloads` \n $likeicon `$likes` \n $icon_length `$Length`\n".$cpCount.
+		    "───────────────────\n";
 		$songdata = ":musical_note: $songdesc";
 		$extrainfo = 
 		    $songinfo." \n".
@@ -386,7 +450,7 @@ class discordLib {
 		    "LevelID: $levelID";
 		$sentstars = "Sent Stars: $stars $icon_star";
 		$bar = "───────────────────";
-		$statsc = "$icon_download2 `‌$downloads` \n $likeicon `$likes` \n $icon_length `$Length`";
+		$statsc = "$icon_download2 `‌$downloads` \n $likeicon `$likes` \n $icon_length `$Length`\n".$cpCount;
 		$dailyinqueque = "New Daily/weekly level queued!";
 		$isout = "$icon_length __Is out:__ $stars";
 		$oldacc = "Old Account: **$userName**";
@@ -1103,6 +1167,7 @@ class discordLib {
 	}
 	public function iconSetProfile($icontype, $icon, $color1, $color2, $glow, $accIcon, $accShip, $accBall, $accBird, $accDart, $accRobot, $accSpider){
 		chdir(dirname(__FILE__));
+		$icontype = 100;
 		/*
 		include __DIR__ . "/../lib/connection.php";
 		//user data
@@ -1209,42 +1274,62 @@ class discordLib {
 		imagepng($base, $filename);
 		return $imgurl;
 	}
-	public function roleAssign($objectID, $objectType, $value, $value2){
+	public function roleAssign($accountID){
 		include __DIR__ . "/../lib/connection.php";
 		include __DIR__ . "/../../config/discord.php";
-		if($discordEnabled != 1){
-			return false;
-		}
-		if($objectType == 2){ //get accountID from userID
-			$query = $db->prepare("SELECT extID FROM users WHERE userID = :id");
-			$query->execute([':id' => $objectID]);
-			$objectID = $query->fetchColumn();
-		}
-		//get discordID & discordLinkReq
-		$query = $db->prepare("SELECT discordID,discordLinkReq FROM accounts WHERE accountID=:accountID"); //getting differences
-		$query->execute([':accountID' => $objectID]);
+		if($roleAssign != 1){ return false; }
+		if($discordEnabled != 1){ return false; }
+		$query = $db->prepare("SELECT discordID,discordLinkReq FROM accounts WHERE accountID=:accountID");
+		$query->execute([':accountID' => $accountID]);
+		if($query->rowCount() == 0){ return false; }
 		$discord = $query->fetch();
 		$discordID = $discord["discordID"];
 		$discordLinkReq = $discord["discordLinkReq"];
-		if($discordLinkReq != 1){
-			return false;
-		}
+		if($discordLinkReq != 1){ return false; }
+		$query = $db->prepare("SELECT stars, creatorPoints, completedMapPacks FROM users WHERE extID=:accountID");
+		$query->execute([':accountID' => $accountID]);
+		if($query->rowCount() == 0){ return false; }
+		$userstats = $query->fetch();
+		$stars = $userstats["stars"];
+		$cp = $userstats["creatorPoints"];
+		$mpc = $userstats["completedMapPacks"];
 		//member role
-		$cmd = $prefix."setrole ".$discordID." ".$memberRole;
+		$cmd = $prefix."setrole ".$discordID." ".$role1;
 		$data = array("content"=> $cmd);  
 		$data_string = json_encode($data);
 		$this->discordNotify(3, $data_string);
-		if($value > 499){ // +500 stars role
-			$cmd = $prefix."setrole ".$discordID." ".$starsRole;
+		// +500 stars role
+		if($stars > 499){ 
+			$cmd = $prefix."setrole ".$discordID." ".$role2;
 			$data = array("content"=> $cmd);  
 			$data_string = json_encode($data);
 			$this->discordNotify(3, $data_string);
 		}
-		if($value2 > 5 AND $value > 749 ){ // +5 rated levels role & 750 stars
-			$cmd = $prefix."setrole ".$discordID." ".$ratedLevelsRole;
+		// +5 rated levels role & 750 stars
+		if($cp > 4 AND $stars > 749 ){ 
+			$cmd = $prefix."setrole ".$discordID." ".$role3;
 			$data = array("content"=> $cmd);  
 			$data_string = json_encode($data);
 			$this->discordNotify(3, $data_string);
+		}
+		// +5 cp, 25 mpc & 1500 stars
+		if($cp > 5 AND $mpc > 24 AND $stars > 1499 ){ 
+			$cmd = $prefix."setrole ".$discordID." ".$role4;
+			$data = array("content"=> $cmd);  
+			$data_string = json_encode($data);
+			$this->discordNotify(3, $data_string);
+		}
+		// 10 cp's, 3000 stars & all map packs
+		if($cp > 9 AND $stars > 2999){
+			$query = $db->prepare("SELECT count(*) FROM mappacks");
+			$query->execute();
+			$maxmp = $query->fetchColumn();
+			if($mpc == $maxmp){
+				$cmd = $prefix."setrole ".$discordID." ".$role5;
+				$data = array("content"=> $cmd);  
+				$data_string = json_encode($data);
+				$this->discordNotify(3, $data_string);
+			}
 		}
 	}
 	public function charCount($value){
