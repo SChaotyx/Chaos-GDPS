@@ -1084,7 +1084,7 @@ class discordLib {
 	//ICON GENERATOR (without query)
 	public function iconGenerator($icontype, $icon, $color1, $color2, $glow, $request){
 		switch($icontype){
-			case 0: $prefix1 = "player"; $prefix2 = "P"; $folder = "0"; break;
+			case 0: $prefix1 = "player"; $prefix2 = "P"; $folder = "0ob"; break;
 			case 1: $prefix1 = "ship"; $prefix2 = "S"; $folder = "1"; break;
 			case 2: $prefix1 = "player_ball"; $prefix2 = "B"; $folder = "2"; break;
 			case 3: $prefix1 = "bird"; $prefix2 = "U"; $folder = "3"; break;
