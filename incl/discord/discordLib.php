@@ -180,6 +180,7 @@ class discordLib {
 			$user = ":chart_with_upwards_trend: __**".$objData["userName"]."'s**__ Stats";
 			$stats = "$icon_star `".$this->charCount($objData["stars"])."`\n$icon_diamond `".$this->charCount($objData["diamonds"])."`\n$icon_secretcoin `".$this->charCount($objData["coins"])."`\n$icon_verifycoins `".$this->charCount($objData["uc"])."`\n$icon_demon `".$this->charCount($objData["demons"])."`";
 			$statsDiff = "$icon_star `".$this->charCount($objData["starsDiff"])."`\n$icon_diamond `".$this->charCount($objData["diamondsDiff"])."`\n$icon_secretcoin `".$this->charCount($objData["coinsDiff"])."`\n$icon_verifycoins `".$this->charCount($objData["ucDiff"])."`\n$icon_demon `".$this->charCount($objData["demonsDiff"])."`";
+			$userInfo = "userID: ".$objData["userID"];
 			$data = array(
 				'embed'=> [
 					"title"=> "$icon_info User Stats Updated!!!",
@@ -188,7 +189,7 @@ class discordLib {
 						["name" => "────────────", "value" => $stats, "inline" => true],
 						["name" => "────Diff────", "value" => $statsDiff, "inline" => true],
 					],
-					"footer"=> ["icon_url"=> ($iconhost."misc/gdpsbot.png"), "text"=> $levelInfo],
+					"footer"=> ["icon_url"=> ($iconhost."misc/gdpsbot.png"), "text"=> $userInfo],
 				]);
 			$data_string = json_encode($data);
 			$this->discordNotify(2, $data_string);

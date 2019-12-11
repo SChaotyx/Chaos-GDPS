@@ -149,7 +149,7 @@ $query->execute([':gameVersion' => $gameVersion, ':userName' => $userName, ':coi
 $query2->execute([':timestamp' => time(), ':stars' => $starsdiff, ':account' => $userID, ':coinsd' => $coindiff, ':demon' => $demondiff, ':usrco' => $ucdiff, ':diamond' => $diadiff]);
 if(is_numeric($_POST["accountID"])){
 	$userData = array(
-		"userName" => $userName,
+		"userName" => $userName, "userID" => $userID,
 		"stars" => $stars, "starsDiff" => $starsdiff,
 		"coins" => $coins, "coinsDiff" => $coindiff,
 		"demons" => $demons, "demonsDiff" => $demondiff,

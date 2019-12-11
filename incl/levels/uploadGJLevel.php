@@ -148,22 +148,20 @@ if($levelString != "" AND $levelName != ""){
 		$query = $db->prepare("UPDATE levels SET levelName=:levelName, gameVersion=:gameVersion,  binaryVersion=:binaryVersion, userName=:userName, levelDesc=:levelDesc, levelVersion=:levelVersion, levelLength=:levelLength, audioTrack=:audioTrack, auto=:auto, password=:password, original=:original, twoPlayer=:twoPlayer, songID=:songID, objects=:objects, coins=:coins, requestedStars=:requestedStars, extraString=:extraString, levelString=:levelString, levelInfo=:levelInfo, secret=:secret, updateDate=:uploadDate, unlisted=:unlisted, hostname=:hostname, isLDM=:ldm WHERE levelName=:levelName AND extID=:id");	
 		$query->execute([':levelName' => $levelName, ':gameVersion' => $gameVersion, ':binaryVersion' => $binaryVersion, ':userName' => $userName, ':levelDesc' => $levelDesc, ':levelVersion' => $levelVersion, ':levelLength' => $levelLength, ':audioTrack' => $audioTrack, ':auto' => $auto, ':password' => $password, ':original' => $original, ':twoPlayer' => $twoPlayer, ':songID' => $songID, ':objects' => $objects, ':coins' => $coins, ':requestedStars' => $requestedStars, ':extraString' => $extraString, ':levelString' => "", ':levelInfo' => $levelInfo, ':secret' => $secret, ':levelName' => $levelName, ':id' => $id, ':uploadDate' => $uploadDate, ':unlisted' => $unlisted, ':hostname' => $hostname, ':ldm' => $ldm]);
 		file_put_contents("../../data/levels/$levelID",$levelString);
-		echo $levelID;
-		$lvlData = array("levelID" => $levelID, "levelName" => $levelName, "userName" => $userName, "original" => $original, "objects" => $objects);
 		if($unlisted==0){
-			//$dis->discordNotifyNew(2, $levelID, 1, 2, 19, 7, 1, 1, 0, 0);
+			$lvlData = array("levelID" => $levelID, "levelName" => $levelName, "userName" => $userName, "original" => $original, "objects" => $objects);
 			$dis->publicAction(0, $lvlData, 2);
-
 		}
+		echo $levelID;
 	}else{
 		$query->execute([':levelName' => $levelName, ':gameVersion' => $gameVersion, ':binaryVersion' => $binaryVersion, ':userName' => $userName, ':levelDesc' => $levelDesc, ':levelVersion' => $levelVersion, ':levelLength' => $levelLength, ':audioTrack' => $audioTrack, ':auto' => $auto, ':password' => $password, ':original' => $original, ':twoPlayer' => $twoPlayer, ':songID' => $songID, ':objects' => $objects, ':coins' => $coins, ':requestedStars' => $requestedStars, ':extraString' => $extraString, ':levelString' => "", ':levelInfo' => $levelInfo, ':secret' => $secret, ':uploadDate' => $uploadDate, ':userID' => $userID, ':id' => $id, ':unlisted' => $unlisted, ':hostname' => $hostname, ':ldm' => $ldm]);
 		$levelID = $db->lastInsertId();
 		file_put_contents("../../data/levels/$levelID",$levelString);
-		echo $levelID;
 		if($unlisted==0){
-			//$dis->discordNotifyNew(2, $levelID, 1, 2, 20, 7, 1, 1, 0, 0);
+			$lvlData = array("levelID" => $levelID, "levelName" => $levelName, "userName" => $userName, "original" => $original, "objects" => $objects);
 			$dis->publicAction(0, $lvlData, 1);
 		}
+		echo $levelID;
 	}
 }else{
 	echo -1;

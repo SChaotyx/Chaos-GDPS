@@ -201,10 +201,12 @@ if($type==3){ //TRENDING
 }
 //USUARIOS ESPECIFICOS - UNLISTED VISIBLES EN "My Online Levels"
 if($type==5){
-	$accountID = $ep->remove($_POST["accountID"]);
-	$extID = $gs->getValue('extID', 'levels', 'userID', $str);
-	if($accountID==$extID){
-		$params = array();
+	if(!empty($_POST["accountID"])){
+		$accountID = $ep->remove($_POST["accountID"]);
+		$extID = $gs->getValue('extID', 'levels', 'userID', $str);
+		if($accountID==$extID){
+			$params = array();
+		}
 	}
 	$params[] = "userID = '$str'";
 }
