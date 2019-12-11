@@ -30,6 +30,9 @@ if ($pass == 1) {
 	$lvls = explode("<k>GS_value</k>",$saveData)[1];
 	$lvls = explode("</s><k>4</k><s>",$lvls)[1];
 	$lvls = explode("</s>",$lvls)[0];
+	$mpc = explode("<k>GS_value</k>",$saveData)[1];
+	$mpc = explode("</s><k>7</k><s>",$mpc)[1];
+	$mpc = explode("</s>",$mpc)[0];
 	$protected_key_encoded = "";
 	if($cloudSaveEncryption == 0){
 		$saveData = str_replace("<k>GJA_002</k><s>".$password."</s>", "<k>GJA_002</k><s>not the actual password</s>", $saveData); //replacing pass
@@ -61,8 +64,9 @@ if ($pass == 1) {
 	$result = $query->fetchAll();
 	$result = $result[0];
 	$extID = $result["extID"];
-	$query = $db->prepare("UPDATE `users` SET `orbs` = :orbs, `completedLvls` = :lvls WHERE extID = :extID");
-	$query->execute([':orbs' => $orbs, ':extID' => $extID, ':lvls' => $lvls]);
+	$query = $db->prepare("UPDATE `users` SET `orbs` = :orbs, `completedLvls` = :lvls, `completedMapPacks` = :mpc WHERE extID = :extID");
+	$query->execute([':orbs' => $orbs, ':extID' => $extID, ':lvls' => $lvls, ':mpc' => $mpc]);
+	$dis->roleAssign($accountID);
 	echo "1";
 }
 else
