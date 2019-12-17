@@ -244,7 +244,7 @@ class Commands {
 			if(substr($comment,0,3) == '!cp'){
 				$cpCount = $commentarray[1];
 				if(!is_numeric($cpCount)){ return false; }
-				if(empty($cpCount)){ return false; }
+				//if(empty($cpCount)){ return false; }
 				$query = $db->prepare("UPDATE levels SET cpCount = :cpValue WHERE levelID=:levelID");
 				$query->execute([':cpValue' => $cpCount, ':levelID' => $levelID]);
 				$gs->updatecp(0, $lvlUserID);
