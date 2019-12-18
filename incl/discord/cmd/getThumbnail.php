@@ -7,12 +7,12 @@ $demondiff = $_POST["starDemonDiff"];
 $difficulty = $_POST["starDifficulty"];
 $diffauto = $_POST["starAuto"];
 $diffdemon = $_POST["starDemon"];
-if($epic == true){
-    $rateimg = "rateepic";
-}else if($feature == true){
+$rateimg = "ratena";
+if($feature == 1){
     $rateimg = "ratefeat";
-}else{
-    $rateimg = "ratena";
+}
+if($epic == 1){
+    $rateimg = "rateepic";
 }
 //DIFF CHECK
 switch($difficulty){
