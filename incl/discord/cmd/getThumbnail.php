@@ -8,10 +8,10 @@ $difficulty = $_POST["starDifficulty"];
 $diffauto = $_POST["starAuto"];
 $diffdemon = $_POST["starDemon"];
 $rateimg = "ratena";
-if($feature == 1){
+if($feature == true){
     $rateimg = "ratefeat";
 }
-if($epic == 1){
+if($epic == true){
     $rateimg = "rateepic";
 }
 //DIFF CHECK
