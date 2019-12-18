@@ -8,7 +8,7 @@ $difficulty = $_POST["starDifficulty"];
 $diffauto = $_POST["starAuto"];
 $diffdemon = $_POST["starDemon"];
 $rateimg = "ratena";
-if($feature == 1){
+if($feature > 0){
     $rateimg = "ratefeat";
 }
 if($epic == 1){
