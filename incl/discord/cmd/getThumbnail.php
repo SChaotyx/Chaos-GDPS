@@ -74,9 +74,11 @@ switch($stars){
 $filename = "../../../resources/difficulty/".$rateimg.$diffimg.$str.".png";
 $imgurl = "difficulty/".$rateimg.$diffimg.$str.".png";
 //CHECK ALREADY EXIST IMG
+/*
 if (file_exists($filename)) {
     echo $iconhost.$imgurl;
 }else{
+*/
     //CREATE IMAGE
     $png = imagecreatefrompng("../resource/$rateimg.png");
     $png2 = imagecreatefrompng("../resource/$diffimg.png");
@@ -87,6 +89,6 @@ if (file_exists($filename)) {
     imagecopyresampled( $png, $png2, 0, 0, 0, 0, $sizex, $sizey, $sizex, $sizey);
     imagecopyresampled( $png, $png3, 0, 0, 0, 0, $sizex, $sizey, $sizex, $sizey);
     imagepng($png, $filename);
-    header('Content-Type: image/png');
-}
+    echo $png;
+//}
 ?>
