@@ -90,5 +90,6 @@ if (file_exists($filename)) {
     imagecopyresampled( $png, $png3, 0, 0, 0, 0, $sizex, $sizey, $sizex, $sizey);
     imagepng($png, $filename);
     header('Content-Type: image/png');
+    echo $png;
 //}
 ?>
