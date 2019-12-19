@@ -78,7 +78,7 @@ foreach($array as $row) {
 $data = array(
     "content"=> "<@".$_POST["tagID"].">, Here TOP 20 Leaderboard based on $Ltype",
     'embed'=> [
-        "title"=> "$Licon __Top 10 Leaderboards!!!__",
+        "title"=> "$Licon __Top 20 Leaderboards!!!__",
         "description"=> "───────────────────\n".$lol,
         "footer"=> ["text"=> "Leaderboard dated on: ".date('Y-m-d H:i:s')],
         "thumbnail"=> ["url"=> ($iconhost."misc/gdpsthumb.png")],
