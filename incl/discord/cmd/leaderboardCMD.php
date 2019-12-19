@@ -50,26 +50,26 @@ switch($type){
 foreach($array as $row) {
     $pos ++;
     switch($pos){
-        case 1: $icontop = $icon_top1; $posn = "1 #";break;
-        case 2: $icontop = $icon_top10; $posn = "2 #";break;
-        case 3: $icontop = $icon_top50; $posn = "3 #";break;
-        case 4: $icontop = $icon_top100; $posn = "4 #";break;
-        case 5: $icontop = $icon_top200; $posn = "5 #";break;
-        case 6: $icontop = $icon_top500; $posn = "6 #";break;
-        case 7: $icontop = $icon_top500; $posn = "7 #";break;
-        case 8: $icontop = $icon_top500; $posn = "8 #";break;
-        case 9: $icontop = $icon_top500; $posn = "9 #";break;
-        case 10: $icontop = $icon_top1000; $posn = "10#";break;
-        case 11: $icontop = $icon_top1000; $posn = "11#";break;
-        case 12: $icontop = $icon_top1000; $posn = "12#";break;
-        case 13: $icontop = $icon_top1000; $posn = "13#";break;
-        case 14: $icontop = $icon_top1000; $posn = "14#";break;
-        case 15: $icontop = $icon_top1000; $posn = "15#";break;
-        case 16: $icontop = $icon_globalrank; $posn = "16#";break;
-        case 17: $icontop = $icon_globalrank; $posn = "17#";break;
-        case 18: $icontop = $icon_globalrank; $posn = "18#";break;
-        case 19: $icontop = $icon_globalrank; $posn = "19#";break;
-        case 20: $icontop = $icon_globalrank; $posn = "20#";break;
+        case 1: $icontop = $icon_top1; $posn = "1 #"; break;
+        case 2: $icontop = $icon_top10; $posn = "2 #"; break;
+        case 3: $icontop = $icon_top50; $posn = "3 #"; break;
+        case 4: $icontop = $icon_top100; $posn = "4 #"; break;
+        case 5: $icontop = $icon_top200; $posn = "5 #"; break;
+        case 6: $icontop = $icon_top500; $posn = "6 #"; break;
+        case 7: $icontop = $icon_top500; $posn = "7 #"; break;
+        case 8: $icontop = $icon_top500; $posn = "8 #"; break;
+        case 9: $icontop = $icon_top500; $posn = "9 #"; break;
+        case 10: $icontop = $icon_top1000; $posn = "10#"; break;
+        case 11: $icontop = $icon_top1000; $posn = "11#"; break;
+        case 12: $icontop = $icon_top1000; $posn = "12#"; break;
+        case 13: $icontop = $icon_top1000; $posn = "13#"; break;
+        case 14: $icontop = $icon_top1000; $posn = "14#"; break;
+        case 15: $icontop = $icon_top1000; $posn = "15#"; break;
+        case 16: $icontop = $icon_globalrank; $posn = "16#"; break;
+        case 17: $icontop = $icon_globalrank; $posn = "17#"; break;
+        case 18: $icontop = $icon_globalrank; $posn = "18#"; break;
+        case 19: $icontop = $icon_globalrank; $posn = "19#"; break;
+        case 20: $icontop = $icon_globalrank; $posn = "20#"; break;
     }
     $lol .= "$icontop `$posn` | $Licon `".$dis->charCount($row[$type])."` | $icon_profile __**".$row['userName']."**__\n";
 }
@@ -79,7 +79,7 @@ $data = array(
     "content"=> "<@".$_POST["tagID"].">, Here TOP 20 Leaderboard based on $Ltype",
     'embed'=> [
         "title"=> "$Licon __Top 20 Leaderboards!!!__",
-        "description"=> "───────────────────\n".$lol,
+        "description"=> "───────────────────\n".$lol."───────────────────",
         "footer"=> ["text"=> "Leaderboard dated on: ".date('Y-m-d H:i:s')],
         "thumbnail"=> ["url"=> ($iconhost."misc/gdpsthumb.png")],
     ]);
