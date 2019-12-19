@@ -64,7 +64,7 @@ foreach($array as $row) {
         case 12: $icontop = $icon_top1000; $posn = "12#"; break;
         case 13: $icontop = $icon_top1000; $posn = "13#"; break;
         case 14: $icontop = $icon_top1000; $posn = "14#"; break;
-        case 15: $icontop = $icon_top1000; $posn = "15#"; break;
+        case 15: $icontop = $icon_globalrank; $posn = "15#"; break;
         case 16: $icontop = $icon_globalrank; $posn = "16#"; break;
         case 17: $icontop = $icon_globalrank; $posn = "17#"; break;
         case 18: $icontop = $icon_globalrank; $posn = "18#"; break;
