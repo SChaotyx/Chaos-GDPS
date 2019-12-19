@@ -71,7 +71,7 @@ foreach($array as $row) {
         case 19: $icontop = $icon_globalrank; $posn = "19#"; break;
         case 20: $icontop = $icon_globalrank; $posn = "20#"; break;
     }
-    $lol .= "$icontop `$posn` | $Licon `".$dis->charCount($row[$type])."` | $icon_profile __**".$row['userName']."**__\n";
+    $lol .= "$icontop `$posn` | $Licon `".$dis->charCount($row[$type])."` | __**".$row['userName']."**__\n";
 }
 
 
