@@ -46,7 +46,7 @@ foreach($moddata as $mod) {
         case 6: $rank = "$icon_dev"; break;
         case 7: $rank = "$icon_owner"; break;
     }
-    $modlist = "$rank | __**$userName**__\n";
+    $modlist = "$rank | __".$userName."__\n";
     switch($mod["roleID"]){
         case 2:
             $modelist .= $modlist; 
@@ -68,17 +68,17 @@ foreach($moddata as $mod) {
         break;
     }
 }
-if(empty($modelist)){ $mode = ""; }else{ $mode = "MODERATOR:\n".$modelist."───────────────────\n"; }
-if(empty($elderlist)){ $elder = ""; }else{ $elder = "ELDER MODERATOR:\n".$elderlist."───────────────────\n"; }
-if(empty($headlist)){ $head = ""; }else{ $head = "HEAD MODERATOR:\n".$headlist."───────────────────\n"; }
-if(empty($adminlist)){ $admin = ""; }else{ $admin = "ADMIN:\n".$adminlist."───────────────────\n"; }
-if(empty($devlist)){ $dev = ""; }else{ $dev = "DEVELOPER:\n".$devlist."───────────────────\n"; }
+if(empty($modelist)){ $mode = ""; }else{ $mode = "**MODERATOR:**\n".$modelist."───────────────────\n"; }
+if(empty($elderlist)){ $elder = ""; }else{ $elder = "**ELDER MODERATOR:**\n".$elderlist."───────────────────\n"; }
+if(empty($headlist)){ $head = ""; }else{ $head = "**HEAD MODERATOR:**\n".$headlist."───────────────────\n"; }
+if(empty($adminlist)){ $admin = ""; }else{ $admin = "**ADMIN:**\n".$adminlist."───────────────────\n"; }
+if(empty($devlist)){ $dev = ""; }else{ $dev = "**DEVELOPER:**\n".$devlist."───────────────────\n"; }
 if(empty($ownerlist)){ $owner = ""; }else{ $owner = "OWNER:\n".$ownerlist."───────────────────\n"; }
 $lel = "───────────────────\n".$owner.$dev.$admin.$head.$elder.$mode;
 $data = array(
     "content"=> "<@".$_POST["tagID"].">, here the full list of moderators in the GDPS",
     'embed'=> [
-        "title"=> "<a:Mod:536710033589665803> __MODLIST__",
+        "title"=> "<a:Mod:536710033589665803> __Moderator List.__",
         "description"=> $lel,
         "footer"=> ["text"=> date('Y-m-d H:i:s')],
         "thumbnail"=> ["url"=> ($iconhost."misc/gdpsthumb.png")],
