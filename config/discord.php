@@ -1,5 +1,5 @@
 <?php
-include __DIR__."/../../private/discord.php";
+include __DIR__."/../../../private/discord.php";
 //IN FILE
 /*
 $discordEnabled = 0;
