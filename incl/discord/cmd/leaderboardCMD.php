@@ -12,15 +12,22 @@ require_once "../discordLib.php";
 $dis = new discordLib();
 require_once "../emojis.php";
 
-if(empty($_POST["type"])){
-	exit ("The server did not receive data");
+if(empty($_POST)){
+    exit ("The server did not receive data"); 
 }
-$type = $_POST["type"];
+
+if(empty($_POST["type"])){
+    $type = "stars";
+}else{
+    $type = $_POST["type"];
+}
+
 $tag = $_POST["tagID"];
 
-$query = $db->prepare("SELECT * FROM users WHERE $type AND isBanned = 0 ORDER BY $type DESC LIMIT 20");
 if($type === "creatorPoints"){
     $query = $db->prepare("SELECT * FROM users WHERE $type AND isCreatorBanned = 0 ORDER BY $type DESC LIMIT 20");
+}else{
+    $query = $db->prepare("SELECT * FROM users WHERE $type AND isRegistered = 1 AND isBanned = 0 ORDER BY $type DESC LIMIT 20");
 }
 $query->execute();
 if($query->rowCount() == 0){
