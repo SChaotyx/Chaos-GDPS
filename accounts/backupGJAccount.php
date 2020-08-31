@@ -66,8 +66,8 @@ if ($pass == 1) {
 	$extID = $result["extID"];
 	$query = $db->prepare("UPDATE `users` SET `orbs` = :orbs, `completedLvls` = :lvls, `completedMapPacks` = :mpc WHERE extID = :extID");
 	$query->execute([':orbs' => $orbs, ':extID' => $extID, ':lvls' => $lvls, ':mpc' => $mpc]);
-	$dis->roleAssign($accountID); //Esto causa problemas!!!!!!!! (comentar si roleaAssign esta desactivado)
 	echo "1";
+	$dis->roleAssign($accountID); //Esto causa problemas!!!!!!!! (comentar si roleaAssign esta desactivado)
 }
 else
 {
