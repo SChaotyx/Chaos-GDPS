@@ -178,7 +178,13 @@ class discordLib {
 		}
 		if($objectType == 1){
 			$user = ":chart_with_upwards_trend: __**".$objData["userName"]."'s**__ Stats";
-			$stats = "$icon_star `".$this->charCount($objData["stars"])."`\n$icon_diamond `".$this->charCount($objData["diamonds"])."`\n$icon_secretcoin `".$this->charCount($objData["coins"])."`\n$icon_verifycoins `".$this->charCount($objData["uc"])."`\n$icon_demon `".$this->charCount($objData["demons"])."`";
+
+			$stats = "$icon_star `".$this->charCount($objData["stars"])."` ─> `".$this->charCount2($this->ispositive($objData["starsDiff"]).$objData["starsDiff"])."`\n".
+				     "$icon_diamond `".$this->charCount($objData["diamonds"])."` ─> `".$this->charCount2($this->ispositive($objData["diamondsDiff"]).$objData["diamondsDiff"])."`\n".
+				  	 "$icon_secretcoin `".$this->charCount($objData["coins"])."` ─> `".$this->charCount2($this->ispositive($objData["coinsDiff"]).$objData["coinsDiff"])."`\n".
+				  	 "$icon_verifycoins `".$this->charCount($objData["uc"])."` ─> `".$this->charCount2($this->ispositive($objData["ucDiff"]).$objData["ucDiff"])."`\n".
+					 "$icon_demon `".$this->charCount($objData["demons"])."` ─> `".$this->charCount2($this->ispositive($objData["demonsDiff"]).$objData["demonsDiff"])."`";
+					   
 			$statsDiff = "$icon_star `".$this->charCount($objData["starsDiff"])."`\n$icon_diamond `".$this->charCount($objData["diamondsDiff"])."`\n$icon_secretcoin `".$this->charCount($objData["coinsDiff"])."`\n$icon_verifycoins `".$this->charCount($objData["ucDiff"])."`\n$icon_demon `".$this->charCount($objData["demonsDiff"])."`";
 			$userInfo = "userID: ".$objData["userID"];
 			$data = array(
@@ -186,8 +192,7 @@ class discordLib {
 					"title"=> "$icon_info User Stats Updated!!!",
 					"description" => $user,
 					"fields" => [
-						["name" => "────────────", "value" => $stats, "inline" => true],
-						["name" => "────Diff────", "value" => $statsDiff, "inline" => true],
+						["name" => "────────────", "value" => $stats],
 					],
 					"footer"=> ["icon_url"=> ($iconhost."misc/gdpsbot.png"), "text"=> $userInfo],
 				]);
@@ -1333,9 +1338,16 @@ class discordLib {
 			}
 		}
 	}
+	public function ispositive($value){
+		if($value > 0){
+			return "+";
+		}
+	}
 	public function charCount($value){
 		$char = strlen($value);
 		switch($char){
+			case 0: $space = "         ";
+			break;
 			case 1: $space = "        ";
 			break;
 			case 2: $space = "       ";
@@ -1356,6 +1368,24 @@ class discordLib {
 			break;
 		}
 		return $space.$value;
+	}
+	public function charCount2($value){
+		$char = strlen($value);
+		switch($char){
+			case 0: $space = "     ";
+			break;
+			case 1: $space = "    ";
+			break;
+			case 2: $space = "   ";
+			break;
+			case 3: $space = "  ";
+			break;
+			case 4: $space = " ";
+			break;
+			case 5: $space = "";
+			break;
+		}
+		return $value.$space;
 	}
 }
 ?>
