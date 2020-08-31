@@ -32,7 +32,7 @@ if(!empty($_POST["accountID"])){
 $type = $ep->remove($_POST["type"]);
 if($type == "top" OR $type == "creators" OR $type == "relative"){
 	if($type == "top"){
-		$query = "SELECT * FROM users WHERE isBanned = '0' AND gameVersion $sign AND stars > 0 ORDER BY stars DESC LIMIT 100";
+		$query = "SELECT * FROM users WHERE isRegistered = '1' AND isBanned = '0' AND gameVersion $sign AND stars > 0 ORDER BY stars DESC LIMIT 100";
 	}
 	if($type == "creators"){
 		$query = "SELECT * FROM users WHERE isCreatorBanned = '0' AND creatorPoints > 0 ORDER BY creatorPoints DESC LIMIT 100";
@@ -55,6 +55,7 @@ if($type == "top" OR $type == "creators" OR $type == "relative"){
 				SELECT	*	FROM users
 				WHERE stars <= :stars
 				AND isBanned = 0
+				AND isRegistered = 1
 				AND gameVersion $sign
 				ORDER BY stars DESC
 				LIMIT $count
@@ -64,6 +65,7 @@ if($type == "top" OR $type == "creators" OR $type == "relative"){
 				SELECT * FROM users
 				WHERE stars >= :stars
 				AND isBanned = 0
+				AND isRegistered = 1
 				AND gameVersion $sign
 				ORDER BY stars ASC
 				LIMIT $count
@@ -82,7 +84,7 @@ if($type == "top" OR $type == "creators" OR $type == "relative"){
 		$query->execute();
 		$f = "SELECT rank, stars FROM (
 							SELECT @rownum := @rownum + 1 AS rank, stars, extID, isBanned
-							FROM users WHERE isBanned = '0' AND gameVersion $sign ORDER BY stars DESC
+							FROM users WHERE isRegistered = '1' AND isBanned = '0' AND gameVersion $sign ORDER BY stars DESC
 							) as result WHERE extID=:extid";
 		$query = $db->prepare($f);
 		$query->execute([':extid' => $extid]);
