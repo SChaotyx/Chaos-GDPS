@@ -904,24 +904,25 @@ class mainLib {
 		//getting cp total count from levels where "cpCount"
 		$query = $db->prepare("SELECT SUM(cpCount) AS cp_count FROM levels WHERE userID = :userID AND starStars != 0");
 		$query->execute([':userID' => $id]);
-		if ($query->rowCount() == 0) { return false; }
 		$result = $query->fetchAll();
 		foreach($result as $level){
-			$cpCount = $level["cp_count"];
+			$cpCount = 0 + $level["cp_count"];
 		}
-		//getting gauntlet levels count
-		$query = $db->prepare("SELECT level1, level2, level3, level4, level5 FROM gauntlets");
-		$query->execute();
-		if ($query->rowCount() !== 0) {
-			$levelgauntlet = $query->fetchAll();
-			foreach($levelgauntlet as $gauntlet){
-				for($x = 1; $x < 6; $x++){
-					$query = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND levelID = :levelIDgauntlet");
-					$query->execute([':userID' => $userID, ':levelIDgauntlet' => $gauntlet["level".$x]]);
-					$cpGain = $query->fetchColumn();
-					$cpCount = $cpCount + $cpGain;
+		if ($cpCount > 0) {
+			//getting gauntlet levels count
+			$query = $db->prepare("SELECT level1, level2, level3, level4, level5 FROM gauntlets");
+			$query->execute();
+			if ($query->rowCount() !== 0) {
+				$levelgauntlet = $query->fetchAll();
+				foreach($levelgauntlet as $gauntlet){
+					for($x = 1; $x < 6; $x++){
+						$query = $db->prepare("SELECT count(*) FROM levels WHERE userID = :userID AND levelID = :levelIDgauntlet");
+						$query->execute([':userID' => $userID, ':levelIDgauntlet' => $gauntlet["level".$x]]);
+						$cpGain = $query->fetchColumn();
+						$cpCount = $cpCount + $cpGain;
+					}
 				}
-			}
+			} 
 		}
 		//inserting cp value
 		$query = $db->prepare("UPDATE users SET creatorPoints = :creatorpoints WHERE userID=:userID");

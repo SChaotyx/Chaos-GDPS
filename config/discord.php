@@ -1,5 +1,5 @@
 <?php
-include __DIR__."/../../../private/discord.php";
+include __DIR__."/../../private/discord.php";
 //IN FILE
 /*
 $discordEnabled = 0;
@@ -9,7 +9,7 @@ $iconhost = "<host>/resources/"; //host de los iconos
 $channel1 = ""; //mod action channel id
 $channel2 = ""; //public actions channel id
 $channel3 = ""; //bot actions channel id
-$roleAssign = 1;
+$roleAssign = 0;
 $prefix = ""; //bot prefix
 $role1 = ""; //gdps member role id
 $role2 = ""; //500 stars role
