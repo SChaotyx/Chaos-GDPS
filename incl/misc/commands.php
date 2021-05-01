@@ -361,10 +361,6 @@ class Commands {
 		//PUBLIC COMMANDS
 		//----------------
 		//----------------
-		if(substr($command, 0, 9) == '!updatecp'){
-			$gs->updatecp(0, $userID);
-			return true;
-		}
 		if(substr($command, 0, 8) == '!confirm'){
 			$code = $commentarray[1];
 			$query = $db->prepare("SELECT discordLinkReq, discordID FROM accounts WHERE accountID = :accountID");
