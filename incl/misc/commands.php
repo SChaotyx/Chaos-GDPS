@@ -122,22 +122,31 @@ class Commands {
 		if($gs->checkPermission($accountID, "headCommands")){
 			if(substr($comment,0,6) == '!daily' OR substr($comment,0,7) == '!weekly'){
 				if($lvlstars == 0){ return false; }
-				if(substr($comment,0,6) == '!daily'){ $type = 0; $title = 11; }
+				if(substr($comment,0,6) == '!daily'){ 
+					if($lvlstars == 10){ return false; }
+					$type = 0; $title = 11;
+					$strtotime = strtotime("tomorrow 00:00:00");
+					$nextqueque = 86400; 
+				}
 				if(substr($comment,0,7) == '!weekly'){ 
 					if($lvlstars != 10){ return false; }
 					$type = 1; $title = 12; 
+					$strtotime = strtotime("next monday");
+					$nextqueque = 604800;
 				}
+				/*
 				$query = $db->prepare("SELECT count(*) FROM dailyfeatures WHERE levelID = :level AND type = :type");
 				$query->execute([':level' => $levelID, ':type' => $type]);
 				if($query->fetchColumn() != 0){
 					return false;
 				}
+				*/
 				$query = $db->prepare("SELECT timestamp FROM dailyfeatures WHERE timestamp >= :tomorrow AND type = :type ORDER BY timestamp DESC LIMIT 1");
-				$query->execute([':tomorrow' => strtotime("tomorrow 00:00:00"), ':type' => $type]);
+				$query->execute([':tomorrow' => $strtotime, ':type' => $type]);
 				if($query->rowCount() == 0){
-					$timestamp = strtotime("tomorrow 00:00:00");
+					$timestamp = $strtotime;
 				}else{
-					$timestamp = $query->fetchColumn() + 86400;
+					$timestamp = $query->fetchColumn() + $nextqueque;
 				}
 				$query = $db->prepare("INSERT INTO dailyfeatures (levelID, timestamp, type) VALUES (:levelID, :uploadDate, :type)");
 				$query->execute([':levelID' => $levelID, ':uploadDate' => $timestamp, ':type' => $type]);
