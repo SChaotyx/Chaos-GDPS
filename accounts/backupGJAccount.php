@@ -13,6 +13,8 @@ use Defuse\Crypto\KeyProtectedByPassword;
 use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Key;
 $ep = new exploitPatch();
+require_once "../incl/discord/discordLib.php";
+$dis = new discordLib();
 //here im getting all the data
 $userName = $ep->remove($_POST["userName"]);
 $password = $_POST["password"];
@@ -67,7 +69,7 @@ if ($pass == 1) {
 	$query = $db->prepare("UPDATE `users` SET `orbs` = :orbs, `completedLvls` = :lvls, `completedMapPacks` = :mpc WHERE extID = :extID");
 	$query->execute([':orbs' => $orbs, ':extID' => $extID, ':lvls' => $lvls, ':mpc' => $mpc]);
 	echo "1";
-	$dis->roleAssign($accountID); //Esto causa problemas!!!!!!!! (comentar si roleaAssign esta desactivado)
+	$dis->roleAssign($accountID);
 }
 else
 {
