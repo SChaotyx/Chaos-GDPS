@@ -1277,14 +1277,14 @@ class discordLib {
 		}
 		imagesavealpha($base, true);
 		//build icon set
-		imagecopyresampled( $base, $icon1, 0, 0, 0, 0, 60, 45, 120, 90);
-		imagecopyresampled( $base, $icon2, 60, 0, 0, 0, 60, 45, 120, 90);
-		imagecopyresampled( $base, $icon3, 120, 0, 0, 0, 60, 45, 120, 90);
-		imagecopyresampled( $base, $icon4, 180, 0, 0, 0, 60, 45, 120, 90);
-		imagecopyresampled( $base, $icon5, 240, 0, 0, 0, 60, 45, 120, 90);
-		imagecopyresampled( $base, $icon6, 300, 0, 0, 0, 60, 45, 120, 90);
+		imagecopyresampled( $base, $icon1, 0, 0, 0, 0, 60*2, 45*2, 120, 90);
+		imagecopyresampled( $base, $icon2, 60*2, 0, 0, 0, 60*2, 45*2, 120, 90);
+		imagecopyresampled( $base, $icon3, 120*2, 0, 0, 0, 60*2, 45*2, 120, 90);
+		imagecopyresampled( $base, $icon4, 180*2, 0, 0, 0, 60*2, 45*2, 120, 90);
+		imagecopyresampled( $base, $icon5, 240*2, 0, 0, 0, 60*2, 45*2, 120, 90);
+		imagecopyresampled( $base, $icon6, 300*2, 0, 0, 0, 60*2, 45*2, 120, 90);
 		if($icontype == 100){
-			imagecopyresampled( $base, $icon7, 360, 0, 0, 0, 60, 45, 120, 90);
+			imagecopyresampled( $base, $icon7, 360*2, 0, 0, 0, 60*2, 45*2, 120, 90);
 		}
 		//save icon set
 		imagepng($base, $filename);
