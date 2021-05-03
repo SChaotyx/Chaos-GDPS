@@ -1118,12 +1118,18 @@ class discordLib {
 		//set filename and img url
 		$filename = "../../resources/iconProfile/[$icontype.$icon][$color1][$color2][$glow].png";
 		$imgurl = "iconProfile/[$icontype.$icon][$color1][$color2][$glow].png";
+		if($request == 0){
+			$filename = "../../resources/iconProfile/mainIcon/[$icontype.$icon][$color1][$color2][$glow].png";
+			$imgurl = "iconProfile/mainIcon/[$icontype.$icon][$color1][$color2][$glow].png";
+		}
 		//file exists?
 		if (file_exists($filename)) {
 			if($request == 1){ return $filename; }
 			return $imgurl;
 		}
 		//locate png files
+		$basepng = imagecreatefrompng("resource/icon/iconbase.png");
+		imagesavealpha($basepng, true);
 		$png = imagecreatefrompng("resource/icon/".$folder."/".$prefix1."_".$icon."_001.png"); //icon base (color 1)
 		$png2 = imagecreatefrompng("resource/icon/".$folder."/".$prefix1."_".$icon."_2_001.png"); //icon part 2 (color 2)
 		$png3 = imagecreatefrompng("resource/icon/".$folder."/$iglow"); //icon glow
@@ -1140,6 +1146,10 @@ class discordLib {
 			imagesavealpha($png5, true);
 			imagecopyresampled( $png5, $png3, 0, 0, 0, 0, $sizex, $sizey, $sizex, $sizey);
 			$png3 = $png5;
+		}
+		if($request == 0){ 
+			imagecopyresampled( $basepng, $png3, 0, 0, 0, 0, $sizex, $sizey, $sizex, $sizey);
+			$png3 = $basepng;
 		}
 		imagecopyresampled( $png3, $png2, 0, 0, 0, 0, $sizex, $sizey, $sizex, $sizey);
 		imagecopyresampled( $png3, $png, 0, 0, 0, 0, $sizex, $sizey, $sizex, $sizey);
