@@ -664,10 +664,12 @@ class mainLib {
 		}else{
 			$cpCount = 2;
 		}
+		//medium level not verify coins
+		if($length == 2){ $starCoins = 0; }else{ $starCoins = 1; }
 		//lets assume the perms check is done properly before
-		$query = "UPDATE levels SET starDemon=:demon, starAuto=:auto, starDifficulty=:diff, starStars=:stars, rateDate=:now, starCoins='1', starFeatured=:feature, starEpic='0', cpCount=:cpCount WHERE levelID=:levelID";
+		$query = "UPDATE levels SET starDemon=:demon, starAuto=:auto, starDifficulty=:diff, starStars=:stars, rateDate=:now, starCoins=:starCoins, starFeatured=:feature, starEpic='0', cpCount=:cpCount WHERE levelID=:levelID";
 		$query = $db->prepare($query);	
-		$query->execute([':demon' => $demon, ':auto' => $auto, ':diff' => $difficulty, ':stars' => $stars, ':levelID'=>$levelID, ':now' =>$rateDate, ':feature'=>$feature, ':cpCount'=> $cpCount]);
+		$query->execute([':demon' => $demon, ':auto' => $auto, ':diff' => $difficulty, ':stars' => $stars, ':levelID'=>$levelID, ':now' =>$rateDate, ':feature'=>$feature, ':cpCount'=> $cpCount, ':starCoins'=> $starCoins]);
 		//check mod action
 		$query = $db->prepare("SELECT count(*) FROM modactions WHERE type=:type AND value3=:itemID AND account=:account");
 		$query->execute([':type' => 1, ':itemID' => $levelID, ':account' => $accountID]);
