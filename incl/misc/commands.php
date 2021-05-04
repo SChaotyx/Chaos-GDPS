@@ -96,20 +96,17 @@ class Commands {
 					$dis->discordNotifyNew(1, $levelID, 1, 2, 8, 4, $accountID, 1, 0, 0);
 					return true;
 				}
-				if(substr($comment,0,12) == '!verifycoins'){
-					$query = $db->prepare("UPDATE levels SET starCoins='1' WHERE levelID = :levelID");
-					$query->execute([':levelID' => $levelID]);
+				if(substr($comment,0,7) == '!verify' OR substr($comment,0,9) == '!unverify'){
+					if(substr($comment,0,7) == '!verify'){
+						$starCoins = 1; $v1 = 9; $v2 = 2;
+					}else{
+						$starCoins = 0; $v1 = 10; $v2 = 4;
+					}
+					$query = $db->prepare("UPDATE levels SET starCoins=:starCoins WHERE levelID = :levelID");
+					$query->execute([':levelID' => $levelID, ':starCoins' => $starCoins]);
 					$query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account) VALUES ('3', :value, :levelID, :timestamp, :id)");
 					$query->execute([':value' => "1", ':timestamp' => $uploadDate, ':id' => $accountID, ':levelID' => $levelID]);
-					$dis->discordNotifyNew(1, $levelID, 1, 2, 9, 2, $accountID, 1, 0, 0);
-					return true;
-				}
-				if(substr($comment,0,14) == '!unverifycoins'){
-					$query = $db->prepare("UPDATE levels SET starCoins='0' WHERE levelID = :levelID");
-					$query->execute([':levelID' => $levelID]);
-					$query = $db->prepare("INSERT INTO modactions (type, value, value3, timestamp, account) VALUES ('3', :value, :levelID, :timestamp, :id)");
-					$query->execute([':value' => "0", ':timestamp' => $uploadDate, ':id' => $accountID, ':levelID' => $levelID]);
-					$dis->discordNotifyNew(1, $levelID, 1, 2, 10, 4, $accountID, 1, 0, 0);
+					$dis->discordNotifyNew(1, $levelID, 1, 2, $v1, $v2, $accountID, 1, 0, 0);
 					return true;
 				}
 			}
