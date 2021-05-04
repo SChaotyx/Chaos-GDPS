@@ -386,32 +386,35 @@ class Commands {
 		//HEAD COMMANDS
 		//----------------
 		//----------------
-		if(substr($command, 0, 12) == '!leaderboard' AND $gs->checkPermission($accountID, "headCommands")){
-			$cmdaction = 10;
-			switch($commentarray[1]){
-				case "ban": $cmdaction = 1;
-				break;
-				case "unban": $cmdaction = 0;
-				break;
-			}
-			if($cmdaction==10){
-				return false;
-			}else{
-				$query = $db->prepare("SELECT * FROM users WHERE userName = :userName LIMIT 1");
-				$query->execute([':userName' => $commentarray[2]]);
-				$result = $query->fetchAll();
-				foreach($result as $userdata){
-					$userName = $userdata["userName"];
-					$userID = $userdata["userID"];
+		if($gs->checkPermission($accountID, "headCommands")){
+			if(substr($command, 0, 4) == '!ban' OR substr($command, 0, 6) == '!unban'){
+				$cmdaction = 10;
+				if(substr($command, 0, 4) == '!ban'){
+					$cmdaction = 1;
+					$modaction = "BAN";
+				}else{
+					$cmdaction = 0;
+					$modaction = "UNBAN";
 				}
-				if($query->rowCount() == 0){
+				if($cmdaction==10){
 					return false;
 				}else{
-					$query = $db->prepare("UPDATE users SET isBanned = :cmdaction WHERE userName = :userName LIMIT 1");
-					$query->execute([':userName' => $userName, ':cmdaction' => $cmdaction]);
-					$query = $db->prepare("INSERT INTO modactions  (type, value, value2, timestamp, account) VALUES ('15',:userID, :cmdaction,  :timestamp,:account)");
-					$query->execute([':userID' => $userID, ':cmdaction' => $commentarray[1], ':timestamp' => time(), ':account' => $accountID]);
-					return true;
+					$query = $db->prepare("SELECT * FROM users WHERE userName = :userName LIMIT 1");
+					$query->execute([':userName' => $commentarray[1]]);
+					$result = $query->fetchAll();
+					foreach($result as $userdata){
+						$userName = $userdata["userName"];
+						$userID = $userdata["userID"];
+					}
+					if($query->rowCount() == 0){
+						return false;
+					}else{
+						$query = $db->prepare("UPDATE users SET isBanned = :cmdaction WHERE userName = :userName LIMIT 1");
+						$query->execute([':userName' => $userName, ':cmdaction' => $cmdaction]);
+						$query = $db->prepare("INSERT INTO modactions  (type, value, value2, timestamp, account) VALUES ('15',:userID, :cmdaction,  :timestamp,:account)");
+						$query->execute([':userID' => $userID, ':cmdaction' => $modaction, ':timestamp' => time(), ':account' => $accountID]);
+						return true;
+					}
 				}
 			}
 		}
