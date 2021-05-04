@@ -25,6 +25,6 @@ $chest2maxShards = 6; // THIS VARIABLE IS NAMED IMPROPERLY, A MORE ACCURATE NAME
 $chest2minKeys = 1;
 $chest2maxKeys = 6;
 //REWARD TIMES (in seconds)
-$chest1wait = 3600;
-$chest2wait = 14400;
+$chest1wait = 1800;
+$chest2wait = 7200;
 ?>
