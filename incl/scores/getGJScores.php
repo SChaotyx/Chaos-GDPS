@@ -32,10 +32,10 @@ if(!empty($_POST["accountID"])){
 $type = $ep->remove($_POST["type"]);
 if($type == "top" OR $type == "creators" OR $type == "relative"){
 	if($type == "top"){
-		$query = "SELECT * FROM users WHERE isRegistered = '1' AND isBanned = '0' AND gameVersion $sign AND stars > 9 ORDER BY stars DESC LIMIT 100";
+		$query = "SELECT * FROM users WHERE isRegistered = '1' AND isBanned = '0' AND gameVersion $sign AND stars > 9 ORDER BY stars DESC, demons DESC, userCoins DESC, coins DESC, diamonds DESC LIMIT 100";
 	}
 	if($type == "creators"){
-		$query = "SELECT * FROM users WHERE isCreatorBanned = '0' AND creatorPoints > 0 ORDER BY creatorPoints DESC LIMIT 100";
+		$query = "SELECT * FROM users WHERE isCreatorBanned = '0' AND creatorPoints > 0 ORDER BY creatorPoints DESC, stars DESC, demons DESC, userCoins DESC, coins DESC, diamonds DESC LIMIT 100";
 	}
 	if($type == "relative"){
 		$query = "SELECT * FROM users WHERE extID = :accountID";
@@ -84,7 +84,7 @@ if($type == "top" OR $type == "creators" OR $type == "relative"){
 		$query->execute();
 		$f = "SELECT rank, stars FROM (
 							SELECT @rownum := @rownum + 1 AS rank, stars, extID, isBanned
-							FROM users WHERE isRegistered = '1' AND isBanned = '0' AND gameVersion $sign ORDER BY stars DESC
+							FROM users WHERE isRegistered = '1' AND isBanned = '0' AND gameVersion $sign ORDER BY stars DESC, demons DESC, userCoins DESC, coins DESC, diamonds DESC
 							) as result WHERE extID=:extid";
 		$query = $db->prepare($f);
 		$query->execute([':extid' => $extid]);
@@ -119,7 +119,7 @@ if($type == "friends"){
 		}
 		$people .= ",".$person;
 	}
-	$query = "SELECT * FROM users WHERE extID IN (:accountID $people ) ORDER BY stars DESC";
+	$query = "SELECT * FROM users WHERE extID IN (:accountID $people ) ORDER BY stars DESC, demons DESC, userCoins DESC, coins DESC, diamonds DESC";
 	$query = $db->prepare($query);
 	$query->execute([':accountID' => $accountID]);
 	$result = $query->fetchAll();

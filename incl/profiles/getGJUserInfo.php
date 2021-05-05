@@ -37,7 +37,7 @@ if($query->fetchColumn() > 0){
 	$query->execute();
 	$f = "SELECT rank FROM (
                     SELECT @rownum := @rownum + 1 AS rank, extID
-                    FROM users WHERE isBanned = '0' AND gameVersion > 19 AND stars > 9 ORDER BY stars DESC
+                    FROM users WHERE isBanned = '0' AND gameVersion > 19 AND stars > 9 ORDER BY stars DESC, demons DESC, userCoins DESC, coins DESC, diamonds DESC
                     ) as result WHERE extID=:extid";
 	$query = $db->prepare($f);
 	$query->execute([':extid' => $extid]);

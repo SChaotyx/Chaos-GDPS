@@ -24,11 +24,32 @@ if(empty($_POST["type"])){
 
 $tag = $_POST["tagID"];
 
-if($type === "creatorPoints"){
-    $query = $db->prepare("SELECT * FROM users WHERE $type AND isCreatorBanned = 0 ORDER BY $type DESC LIMIT 20");
-}else{
-    $query = $db->prepare("SELECT * FROM users WHERE $type AND isRegistered = 1 AND isBanned = 0 ORDER BY $type DESC LIMIT 20");
+$querypart1 = "SELECT * FROM users WHERE ";
+$querypart2 = "LIMIT 20";
+switch ($type) {
+    case 'stars':
+        $querypart3 = "$type > 9 AND isRegistered = 1 AND isBanned = 0 ORDER BY $type DESC, demons DESC, userCoins DESC, coins DESC, diamonds DESC ";
+    break;
+    case 'demons':
+        $querypart3 = "$type > 0 AND isRegistered = 1 AND isBanned = 0 ORDER BY $type DESC, stars DESC, userCoins DESC, coins DESC, diamonds DESC ";
+    break;
+    case 'coins':
+        $querypart3 = "$type > 0 AND isRegistered = 1 AND isBanned = 0 ORDER BY $type DESC, stars DESC, demons DESC, userCoins DESC, diamonds DESC ";
+    break;
+    case 'userCoins':
+        $querypart3 = "$type > 0 AND isRegistered = 1 AND isBanned = 0 ORDER BY $type DESC, stars DESC, demons DESC, coins DESC, diamonds DESC ";
+    break;
+    case 'diamonds':
+        $querypart3 = "$type > 99 AND isRegistered = 1 AND isBanned = 0 ORDER BY $type DESC, stars DESC, demons DESC, userCoins DESC, coins DESC ";
+    break;
+    case 'creatorPoints':
+        $querypart3 = "$type > 0 AND isCreatorBanned = 0 ORDER BY $type DESC, stars DESC, demons DESC, userCoins DESC, coins DESC, diamonds DESC ";
+    break;
+    default:
+        $querypart3 = "stars AND isRegistered = 1 AND isBanned = 0 ORDER BY stars DESC, demons DESC, userCoins DESC, coins DESC, diamonds DESC ";
+    break;
 }
+$query = $db->prepare($querypart1.$querypart3.$querypart2);
 $query->execute();
 if($query->rowCount() == 0){
 	$nothing = "<@".$_POST['tagID'].">, Nothing Found";
