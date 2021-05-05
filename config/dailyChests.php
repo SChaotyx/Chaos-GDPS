@@ -16,10 +16,10 @@ $chest1maxShards = 6;
 $chest1minKeys = 1;
 $chest1maxKeys = 6;
 //BIG CHEST
-$chest2minOrbs = 2000;
-$chest2maxOrbs = 4000;
-$chest2minDiamonds = 20;
-$chest2maxDiamonds = 100;
+$chest2minOrbs = 400;
+$chest2maxOrbs = 800;
+$chest2minDiamonds = 10;
+$chest2maxDiamonds = 50;
 $chest2minShards = 1;
 $chest2maxShards = 6; // THIS VARIABLE IS NAMED IMPROPERLY, A MORE ACCURATE NAME WOULD BE $chest2minItemID AND $chest2maxItemID, BUT I DON'T WANT TO RENAME THIS FOR COMPATIBILITY REASONS... IF YOU'RE GETTING A BLANK CUBE IN YOUR DAILY CHESTS, YOU SET THIS TOO HIGH
 $chest2minKeys = 1;
