@@ -133,7 +133,7 @@ $uploadDate = time();
 		$hostname = $_SERVER['REMOTE_ADDR'];
 	}
 $gs->updatecp(0, $userID);
-$query = $db->prepare("SELECT stars,coins,demons,userCoins,diamonds,creatorPoints FROM users WHERE userID=:userID LIMIT 1"); //getting differences
+$query = $db->prepare("SELECT * FROM users WHERE userID=:userID LIMIT 1"); //getting differences
 $query->execute([':userID' => $userID]);
 $old = $query->fetch();
 $starsdiff = $stars - $old["stars"];
@@ -142,6 +142,8 @@ $demondiff = $demons - $old["demons"];
 $ucdiff = $userCoins - $old["userCoins"];
 $diadiff = $diamonds - $old["diamonds"];
 $creatorPoints = $old["creatorPoints"];
+$extID = $old["extID"];
+
 $query2 = $db->prepare("INSERT INTO actions (type, value, timestamp, account, value2, value3, value4, value5) 
 									 VALUES ('9',:stars,:timestamp,:account,:coinsd, :demon, :usrco, :diamond)"); //creating the action
 $query = $db->prepare("UPDATE users SET gameVersion=:gameVersion, userName=:userName, coins=:coins,  secret=:secret, stars=:stars, demons=:demons, icon=:icon, color1=:color1, color2=:color2, iconType=:iconType, userCoins=:userCoins, special=:special, accIcon=:accIcon, accShip=:accShip, accBall=:accBall, accBird=:accBird, accDart=:accDart, accRobot=:accRobot, accGlow=:accGlow, IP=:hostname, lastPlayed=:uploadDate, accSpider=:accSpider, accExplosion=:accExplosion, diamonds=:diamonds WHERE userID=:userID");
@@ -154,7 +156,8 @@ if(is_numeric($_POST["accountID"])){
 		"coins" => $coins, "coinsDiff" => $coindiff,
 		"demons" => $demons, "demonsDiff" => $demondiff,
 		"uc" => $userCoins, "ucDiff" => $ucdiff,
-		"diamonds" => $diamonds, "diamondsDiff" => $diadiff
+		"diamonds" => $diamonds, "diamondsDiff" => $diadiff,
+		"extID" => $extID
 	);
 	if($starsdiff > 0 OR $coindiff > 0 OR $demondiff > 0 OR $ucdiff > 0 OR $diadiff > 0){
 		$dis->publicAction(1, $userData, 0);

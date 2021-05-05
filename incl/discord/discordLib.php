@@ -176,6 +176,9 @@ class discordLib {
 			$data_string = json_encode($data);
 			$this->discordNotify(2, $data_string);
 		}
+		//
+		//PROFILES
+		//
 		if($objectType == 1){
 			$user = ":chart_with_upwards_trend: __**".$objData["userName"]."'s**__ Stats";
 
@@ -187,21 +190,22 @@ class discordLib {
 					   
 			$statsDiff = "$icon_star `".$this->charCount($objData["starsDiff"])."`\n$icon_diamond `".$this->charCount($objData["diamondsDiff"])."`\n$icon_secretcoin `".$this->charCount($objData["coinsDiff"])."`\n$icon_verifycoins `".$this->charCount($objData["ucDiff"])."`\n$icon_demon `".$this->charCount($objData["demonsDiff"])."`";
 			$userInfo = "userID: ".$objData["userID"];
+
+			$mainIcon = $this->iconProfile($objData["extID"]);
+
 			$data = array(
 				'embed'=> [
 					"title"=> "$icon_info User Stats Updated!!!",
-					"description" => $user,
-					"fields" => [
-						["name" => "────────────", "value" => $stats],
-					],
+					"description" => $user."\n"."\n".$stats,
+					//"fields" => [
+					//	["name" => "────────────", "value" => $stats],
+					//],
 					"footer"=> ["icon_url"=> ($iconhost."misc/gdpsbot.png"), "text"=> $userInfo],
+					"thumbnail"=> ["url"=> ($iconhost.$mainIcon)],
 				]);
 			$data_string = json_encode($data);
 			$this->discordNotify(2, $data_string);
 		}
-		//
-		//PROFILES
-		//
 	}
 	public function title($id){
 		include __DIR__ . "/../discord/emojis.php";
